@@ -26,7 +26,7 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
     private List<MondaySubjects> subjectList;
     private Context context;
     private String classValue, user_id;
-    private FirebaseFirestore mFirestore;
+    private FirebaseFirestore mFirestore, mFirestore2;
     private FirebaseAuth mAuth;
 
 
@@ -46,6 +46,7 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
         mAuth = FirebaseAuth.getInstance();
         user_id = mAuth.getCurrentUser().getUid();
         mFirestore = FirebaseFirestore.getInstance();
+        mFirestore2 = FirebaseFirestore.getInstance();
         classValue = FacultySubjectTeacherDetails.getClassValue();
         holder.subject.setText(subjectList.get(position).getSubject());
         holder.from.setText(subjectList.get(position).getFrom());
