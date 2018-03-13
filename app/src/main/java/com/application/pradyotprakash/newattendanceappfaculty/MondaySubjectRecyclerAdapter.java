@@ -2,6 +2,7 @@ package com.application.pradyotprakash.newattendanceappfaculty;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +10,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -25,8 +29,8 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
 
     private List<MondaySubjects> subjectList;
     private Context context;
-    private String classValue, user_id;
-    private FirebaseFirestore mFirestore, mFirestore2;
+    private String classValue, user_id, facultyName, takenByUserId;
+    private FirebaseFirestore mFirestore, mFirestore2, mFirestore3, mFirestore4, mFirestore5;
     private FirebaseAuth mAuth;
 
 
@@ -47,12 +51,43 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
         user_id = mAuth.getCurrentUser().getUid();
         mFirestore = FirebaseFirestore.getInstance();
         mFirestore2 = FirebaseFirestore.getInstance();
+        mFirestore3 = FirebaseFirestore.getInstance();
+        mFirestore4 = FirebaseFirestore.getInstance();
+        mFirestore5 = FirebaseFirestore.getInstance();
         classValue = FacultySubjectTeacherDetails.getClassValue();
         holder.subject.setText(subjectList.get(position).getSubject());
         holder.from.setText(subjectList.get(position).getFrom());
         holder.to.setText(subjectList.get(position).getTo());
-        holder.takenByValue.setText(subjectList.get(position).getTakenBy());
+        takenByUserId = subjectList.get(position).getTakenBy();
         final String subject_id = subjectList.get(position).subjectId;
+        mFirestore4.collection("Faculty").document(takenByUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().exists()) {
+                        String takenByName = task.getResult().getString("name");
+                        holder.takenByValue.setText(takenByName);
+                    }
+                }
+            }
+        });
+        try {
+            if (takenByUserId.equals(user_id)) {
+                holder.subject.setTextColor(Color.rgb(244, 67, 54));
+            }
+        } catch (Exception e) {
+            holder.subject.setTextColor(Color.BLACK);
+        }
+        mFirestore3.collection("Faculty").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().exists()) {
+                        facultyName = task.getResult().getString("name");
+                    }
+                }
+            }
+        });
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,9 +97,18 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
                 mFirestore.collection("Timetable").document(classValue).collection("Monday").document(subject_id).update(classMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(context, "Subject is assigned to You.", Toast.LENGTH_SHORT).show();
-                        holder.subject.setTextColor(Color.rgb(244, 67, 54));
-                        holder.takenByValue.setText(user_id);
+                        Map<String, Object> subjectMap = new HashMap<>();
+                        subjectMap.put("subject", subjectList.get(position).getSubject());
+                        subjectMap.put("to", subjectList.get(position).getTo());
+                        subjectMap.put("from", subjectList.get(position).getFrom());
+                        mFirestore2.collection("Faculty").document(user_id).collection("Subject").document(classValue).collection("Monday").document().set(subjectMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(context, "Subject is assigned to You.", Toast.LENGTH_SHORT).show();
+                                holder.subject.setTextColor(Color.rgb(244, 67, 54));
+                                holder.takenByValue.setText(facultyName);
+                            }
+                        });
                     }
                 });
             }
