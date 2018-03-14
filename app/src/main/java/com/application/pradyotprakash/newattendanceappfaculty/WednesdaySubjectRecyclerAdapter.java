@@ -23,10 +23,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by pradyotprakash on 08/03/18.
+ * Created by pradyot on 14/03/18.
  */
 
-public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySubjectRecyclerAdapter.ViewHolder> {
+public class WednesdaySubjectRecyclerAdapter extends RecyclerView.Adapter<WednesdaySubjectRecyclerAdapter.ViewHolder> {
 
     private List<MondaySubjects> subjectList;
     private Context context;
@@ -35,19 +35,19 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
     private FirebaseAuth mAuth;
 
 
-    public MondaySubjectRecyclerAdapter(List<MondaySubjects> subjectList, Context context) {
+    public WednesdaySubjectRecyclerAdapter(List<MondaySubjects> subjectList, Context context) {
         this.subjectList = subjectList;
         this.context = context;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public WednesdaySubjectRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.monday_subject_list, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final WednesdaySubjectRecyclerAdapter.ViewHolder holder, final int position) {
         mAuth = FirebaseAuth.getInstance();
         user_id = mAuth.getCurrentUser().getUid();
         mFirestore = FirebaseFirestore.getInstance();
@@ -93,7 +93,7 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "Wait For A Moment.", Toast.LENGTH_SHORT).show();
-                mFirestore4.collection("Timetable").document(classValue).collection("Monday").document(subject_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                mFirestore4.collection("Timetable").document(classValue).collection("Wednesday").document(subject_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
@@ -102,17 +102,17 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
                                 try {
                                     if (takenBy.equals(user_id)) {
                                         Toast.makeText(context, "You are already the subject teacher of this subject. Long press to remove it", Toast.LENGTH_SHORT).show();
-                                    } else if (takenBy.equals("Not Assigned")){
+                                    } else if (takenBy.equals("Not Assigned")) {
                                         Map<String, Object> classMap = new HashMap<>();
                                         classMap.put("takenBy", user_id);
-                                        mFirestore.collection("Timetable").document(classValue).collection("Monday").document(subject_id).update(classMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        mFirestore.collection("Timetable").document(classValue).collection("Wednesday").document(subject_id).update(classMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Map<String, Object> subjectMap = new HashMap<>();
                                                 subjectMap.put("subject", subjectList.get(position).getSubject());
                                                 subjectMap.put("to", subjectList.get(position).getTo());
                                                 subjectMap.put("from", subjectList.get(position).getFrom());
-                                                mFirestore2.collection("Faculty").document(user_id).collection("Subject").document(classValue).collection("Monday").document(subject_id).set(subjectMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                mFirestore2.collection("Faculty").document(user_id).collection("Subject").document(classValue).collection("Wednesday").document(subject_id).set(subjectMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         Toast.makeText(context, "Subject is assigned to You. Long Press To Remove The Subject.", Toast.LENGTH_SHORT).show();
@@ -138,7 +138,7 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
             @Override
             public boolean onLongClick(View v) {
                 Toast.makeText(context, "Wait For A Moment.", Toast.LENGTH_SHORT).show();
-                mFirestore4.collection("Timetable").document(classValue).collection("Monday").document(subject_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                mFirestore4.collection("Timetable").document(classValue).collection("Wednesday").document(subject_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
@@ -148,14 +148,14 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
                                     if (takenBy.equals(user_id)) {
                                         Map<String, Object> classMap = new HashMap<>();
                                         classMap.put("takenBy", "Not Assigned");
-                                        mFirestore.collection("Timetable").document(classValue).collection("Monday").document(subject_id).update(classMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        mFirestore.collection("Timetable").document(classValue).collection("Wednesday").document(subject_id).update(classMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Map<String, Object> subjectMap = new HashMap<>();
                                                 subjectMap.put("subject", FieldValue.delete());
                                                 subjectMap.put("to", FieldValue.delete());
                                                 subjectMap.put("from", FieldValue.delete());
-                                                mFirestore2.collection("Faculty").document(takenBy).collection("Subject").document(classValue).collection("Monday").document(subject_id).update(subjectMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                mFirestore2.collection("Faculty").document(takenBy).collection("Subject").document(classValue).collection("Wednesday").document(subject_id).update(subjectMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         Toast.makeText(context, "Subject is Removed.", Toast.LENGTH_SHORT).show();
@@ -165,7 +165,7 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
                                                 });
                                             }
                                         });
-                                    } else if (takenBy.equals("Not Assigned")){
+                                    } else if (takenBy.equals("Not Assigned")) {
                                         Toast.makeText(context, "No One Is Assigned To This Subject. Tap To Assign This Subject To You.", Toast.LENGTH_SHORT).show();
                                     } else {
                                         Toast.makeText(context, "This Subject Is Assigned To Other Faculty. You cannot make any changes.", Toast.LENGTH_SHORT).show();
