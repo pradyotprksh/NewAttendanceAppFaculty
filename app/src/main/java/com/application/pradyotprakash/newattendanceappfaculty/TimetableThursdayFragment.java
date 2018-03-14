@@ -28,7 +28,7 @@ public class TimetableThursdayFragment extends Fragment {
     private String classValue;
     private RecyclerView mSubjectListView;
     private List<MondaySubjects> subjectList;
-    private MondaySubjectRecyclerAdapter subjectRecyclerAdapter;
+    private ThursdaySubjectRecyclerAdapter subjectRecyclerAdapter;
 
     public TimetableThursdayFragment() {
         // Required empty public constructor
@@ -45,7 +45,7 @@ public class TimetableThursdayFragment extends Fragment {
         }
         mSubjectListView = view.findViewById(R.id.monday_subject);
         subjectList = new ArrayList<>();
-        subjectRecyclerAdapter = new MondaySubjectRecyclerAdapter(subjectList, getContext());
+        subjectRecyclerAdapter = new ThursdaySubjectRecyclerAdapter(subjectList, getContext());
         mSubjectListView.setHasFixedSize(true);
         mSubjectListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mSubjectListView.setAdapter(subjectRecyclerAdapter);
