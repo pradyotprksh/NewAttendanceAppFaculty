@@ -48,7 +48,12 @@
         <activity
             android:name=".FacultyStaffDetails"
             android:screenOrientation="portrait" />
-        <activity android:name=".SelectSemesterClassTimetable"></activity>
+        <activity
+            android:name=".SelectSemesterClassTimetable"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".StudentAttendanceList"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +32,7 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
     private List<MondaySubjects> subjectList;
     private Context context;
     private String classValue, user_id, facultyName, takenByUserId;
-    private FirebaseFirestore mFirestore, mFirestore2, mFirestore3, mFirestore4, mFirestore5;
+    private FirebaseFirestore mFirestore, mFirestore2, mFirestore3, mFirestore4;
     private FirebaseAuth mAuth;
 
 
@@ -54,7 +55,6 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
         mFirestore2 = FirebaseFirestore.getInstance();
         mFirestore3 = FirebaseFirestore.getInstance();
         mFirestore4 = FirebaseFirestore.getInstance();
-        mFirestore5 = FirebaseFirestore.getInstance();
         classValue = FacultySubjectTeacherDetails.getClassValue();
         holder.subject.setText(subjectList.get(position).getSubject());
         holder.from.setText(subjectList.get(position).getFrom());
@@ -101,7 +101,14 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
                                 String takenBy = task.getResult().getString("takenBy");
                                 try {
                                     if (takenBy.equals(user_id)) {
-                                        Toast.makeText(context, "You are already the subject teacher of this subject. Long press to remove it", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "Attendance", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(context, StudentAttendanceList.class);
+                                        intent.putExtra("classValue", classValue);
+                                        intent.putExtra("subject", subjectList.get(position).getSubject());
+                                        intent.putExtra("from", subjectList.get(position).getFrom());
+                                        intent.putExtra("to", subjectList.get(position).getTo());
+                                        intent.putExtra("name", facultyName);
+                                        context.startActivity(intent);
                                     } else if (takenBy.equals("Not Assigned")){
                                         Map<String, Object> classMap = new HashMap<>();
                                         classMap.put("takenBy", user_id);
