@@ -53,11 +53,10 @@ public class TimetableSaturdayFragment extends Fragment {
         mFirestore.collection("Timetable").document(classValue).collection("Saturday").orderBy("from").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                subjectList.clear();
-                subjectRecyclerAdapter.notifyDataSetChanged();
                 for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
                     if (doc.getType() == DocumentChange.Type.ADDED) {
-                        MondaySubjects subjects = doc.getDocument().toObject(MondaySubjects.class);
+                        String subject_id = doc.getDocument().getId();
+                        MondaySubjects subjects = doc.getDocument().toObject(MondaySubjects.class).withId(subject_id);
                         subjectList.add(subjects);
                         subjectRecyclerAdapter.notifyDataSetChanged();
                     }

@@ -101,7 +101,7 @@ public class TuesdaySubjectRecyclerAdapter extends RecyclerView.Adapter<TuesdayS
                                 String takenBy = task.getResult().getString("takenBy");
                                 try {
                                     if (takenBy.equals(user_id)) {
-                                        Toast.makeText(context, "You are already the subject teacher of this subject. Long press to remove it", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "Tap To Take Attendance", Toast.LENGTH_SHORT).show();
                                     } else if (takenBy.equals("Not Assigned")) {
                                         Map<String, Object> classMap = new HashMap<>();
                                         classMap.put("takenBy", user_id);
