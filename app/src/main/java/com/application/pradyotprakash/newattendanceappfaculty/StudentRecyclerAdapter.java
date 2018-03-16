@@ -1,7 +1,7 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,7 +31,9 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
 
     private List<Students> studentsList;
     private Context context;
-    private FirebaseFirestore mFirestore, mFirestore2;
+    private FirebaseFirestore mFirestore;
+    final String subjectclass = StudentAttendanceList.getSubject();
+    final String classvalue = StudentAttendanceList.getClassValue();
 
     public StudentRecyclerAdapter(Context context, List<Students> studentsList) {
         this.studentsList = studentsList;
@@ -50,8 +48,6 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final String subjectclass = StudentAttendanceList.getSubject();
-        final String classvalue = StudentAttendanceList.getClassValue();
         final String from = StudentAttendanceList.getFrom();
         final String to = StudentAttendanceList.getTo();
         final String student_id = studentsList.get(position).studentId;
@@ -60,7 +56,6 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
         final String currentDateTimeString = sdf.format(d);
         mFirestore = FirebaseFirestore.getInstance();
-        mFirestore2 = FirebaseFirestore.getInstance();
         if (classvalue.equals(studentsList.get(position).getClassName())) {
             holder.mUsn.setText(studentsList.get(position).getUsn());
             CircleImageView mImageView = holder.mImage;
@@ -73,7 +68,9 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
                     attendancePresent.put("date", date);
                     attendancePresent.put("from", from);
                     attendancePresent.put("to", to);
-                    mFirestore.collection("Attendance").document(classvalue).collection(student_id).document(subjectclass).collection(date).document(currentDateTimeString).set(attendancePresent).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    attendancePresent.put("date", date);
+                    attendancePresent.put("time", currentDateTimeString);
+                    mFirestore.collection("Attendance").document(classvalue).collection(student_id).document(subjectclass).set(attendancePresent).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(context, "Present: " + student_id, Toast.LENGTH_SHORT).show();
@@ -90,24 +87,10 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
             holder.stats.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Stats: " + student_id, Toast.LENGTH_SHORT).show();
-                    mFirestore2.collection("Attendance")
-                            .document(classvalue)
-                            .collection(student_id)
-                            .document(subjectclass)
-                            .collection(date)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Toast.makeText(context, "Date: " + document.getId(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    } else {
-                                    }
-                                }
-                            });
+                    Intent intent = new Intent(context, StudentStatus.class);
+                    intent.putExtra("subject", subjectclass);
+                    intent.putExtra("studentid", student_id);
+                    context.startActivity(intent);
                 }
             });
             holder.mView.setOnClickListener(new View.OnClickListener() {
