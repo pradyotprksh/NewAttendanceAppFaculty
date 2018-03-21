@@ -70,10 +70,10 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
                     attendancePresent.put("to", to);
                     attendancePresent.put("date", date);
                     attendancePresent.put("time", currentDateTimeString);
-                    mFirestore.collection("Attendance").document(classvalue).collection(student_id).document(subjectclass).set(attendancePresent).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    mFirestore.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).collection(student_id).document().set(attendancePresent).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(context, "Present: " + student_id, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Present", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -81,7 +81,19 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
             holder.absent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Absent: " + student_id, Toast.LENGTH_SHORT).show();
+                    Map<String, Object> attendancePresent = new HashMap<>();
+                    attendancePresent.put("value", "absent");
+                    attendancePresent.put("date", date);
+                    attendancePresent.put("from", from);
+                    attendancePresent.put("to", to);
+                    attendancePresent.put("date", date);
+                    attendancePresent.put("time", currentDateTimeString);
+                    mFirestore.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).collection(student_id).document().set(attendancePresent).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(context, "Absent", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             });
             holder.stats.setOnClickListener(new View.OnClickListener() {

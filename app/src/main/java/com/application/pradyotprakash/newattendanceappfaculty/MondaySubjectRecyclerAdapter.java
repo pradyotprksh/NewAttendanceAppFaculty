@@ -101,7 +101,6 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
                                 String takenBy = task.getResult().getString("takenBy");
                                 try {
                                     if (takenBy.equals(user_id)) {
-                                        Toast.makeText(context, "Attendance", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(context, StudentAttendanceList.class);
                                         intent.putExtra("classValue", classValue);
                                         intent.putExtra("subject", subjectList.get(position).getSubject());
