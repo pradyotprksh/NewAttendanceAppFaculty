@@ -28,7 +28,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class StudentStatus extends AppCompatActivity {
 
-    private String subject, studentid, name, className;
+    private static String subject, studentid, name, className;
     private CircleImageView studentImage;
     private TextView studentName, studentUsn, studentBranch, studentSemester, studentClass, studentSubject;
     private FirebaseFirestore studentInformationFirestore;
@@ -90,7 +90,7 @@ public class StudentStatus extends AppCompatActivity {
                         studentStatus.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         studentStatus.setAdapter(studentRecyclerAdapter);
                         studentsList.clear();
-                        mFirestore.collection("Attendance").document(className).collection(subject).document(studentid).collection(studentid).addSnapshotListener(StudentStatus.this, new EventListener<QuerySnapshot>() {
+                        mFirestore.collection("Attendance").document(className).collection(subject).document(studentid).collection(studentid).orderBy("time").addSnapshotListener(StudentStatus.this, new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                                 for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
@@ -112,5 +112,17 @@ public class StudentStatus extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public static String getStudentid() {
+        return studentid;
+    }
+
+    public static String getSubject() {
+        return subject;
+    }
+
+    public static String getClassName() {
+        return className;
     }
 }
