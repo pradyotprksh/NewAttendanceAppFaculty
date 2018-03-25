@@ -19,6 +19,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ public class StudentStatus extends AppCompatActivity {
                         studentStatus.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         studentStatus.setAdapter(studentRecyclerAdapter);
                         studentsList.clear();
-                        mFirestore.collection("Attendance").document(className).collection(subject).document(studentid).collection(studentid).orderBy("time").addSnapshotListener(StudentStatus.this, new EventListener<QuerySnapshot>() {
+                        mFirestore.collection("Attendance").document(className).collection(subject).document(studentid).collection(studentid).orderBy("value", Query.Direction.ASCENDING).addSnapshotListener(StudentStatus.this, new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                                 for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {

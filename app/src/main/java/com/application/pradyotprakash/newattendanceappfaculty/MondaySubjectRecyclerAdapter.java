@@ -107,6 +107,7 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
                                         intent.putExtra("from", subjectList.get(position).getFrom());
                                         intent.putExtra("to", subjectList.get(position).getTo());
                                         intent.putExtra("name", facultyName);
+                                        intent.putExtra("whichDay", "Monday");
                                         context.startActivity(intent);
                                     } else if (takenBy.equals("Not Assigned")){
                                         Map<String, Object> classMap = new HashMap<>();

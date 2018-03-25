@@ -48,6 +48,7 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        final String whichDay = StudentAttendanceList.getWhichDay();
         final String from = StudentAttendanceList.getFrom();
         final String to = StudentAttendanceList.getTo();
         final String student_id = studentsList.get(position).studentId;
@@ -70,6 +71,7 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
                     attendancePresent.put("to", to);
                     attendancePresent.put("date", date);
                     attendancePresent.put("time", currentDateTimeString);
+                    attendancePresent.put("weekDay", whichDay);
                     mFirestore.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).collection(student_id).document().set(attendancePresent).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -88,6 +90,7 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
                     attendancePresent.put("to", to);
                     attendancePresent.put("date", date);
                     attendancePresent.put("time", currentDateTimeString);
+                    attendancePresent.put("weekDay", whichDay);
                     mFirestore.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).collection(student_id).document().set(attendancePresent).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {

@@ -11,16 +11,26 @@ public class StudentsStatus extends StatusId{
     String from;
     String to;
     String value;
+    String weekDay;
 
-    public StudentsStatus(String date, String time, String from, String to, String value) {
+    public StudentsStatus(String date, String time, String from, String to, String value, String weekDay) {
         this.date = date;
         this.time = time;
         this.from = from;
         this.to = to;
         this.value = value;
+        this.weekDay = weekDay;
     }
 
     public StudentsStatus() {
+    }
+
+    public String getWeekDay() {
+        return weekDay;
+    }
+
+    public void setWeekDay(String weekDay) {
+        this.weekDay = weekDay;
     }
 
     public String getDate() {

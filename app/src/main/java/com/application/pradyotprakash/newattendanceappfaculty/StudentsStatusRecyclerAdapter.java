@@ -48,9 +48,12 @@ public class StudentsStatusRecyclerAdapter extends RecyclerView.Adapter<Students
         final String studentId = StudentStatus.getStudentid();
         final String className = StudentStatus.getClassName();
         final String subject = StudentStatus.getSubject();
+        String weekDay = statusList.get(position).getWeekDay();
+        String date = statusList.get(position).getDate();
+        String day = date + " " + weekDay;
         mFirestore = FirebaseFirestore.getInstance();
         mFirestore1 = FirebaseFirestore.getInstance();
-        holder.dateValue.setText(statusList.get(position).getDate());
+        holder.dateValue.setText(day);
         String value = statusList.get(position).getValue();
         if (value.equals("present")) {
             holder.statusValue.setText("Present");

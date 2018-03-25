@@ -26,6 +26,7 @@ public class StudentAttendanceList extends AppCompatActivity {
     private static String subject;
     private static String from;
     private static String to;
+    private static String whichDay;
     private String name;
     private TextView classValueText, subjectText, fromText, toText, nameText;
     private List<Students> studentsList;
@@ -44,6 +45,7 @@ public class StudentAttendanceList extends AppCompatActivity {
         from = getIntent().getStringExtra("from");
         to = getIntent().getStringExtra("to");
         name = getIntent().getStringExtra("name");
+        whichDay = getIntent().getStringExtra("whichDay");
         classValueText = findViewById(R.id.classValue);
         subjectText = findViewById(R.id.subjectValue);
         fromText = findViewById(R.id.fromValue);
@@ -97,5 +99,9 @@ public class StudentAttendanceList extends AppCompatActivity {
 
     public static String getTo() {
         return to;
+    }
+
+    public static String getWhichDay() {
+        return whichDay;
     }
 }
