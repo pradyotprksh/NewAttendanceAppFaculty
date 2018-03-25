@@ -32,7 +32,7 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
     private List<MondaySubjects> subjectList;
     private Context context;
     private String classValue, user_id, facultyName, takenByUserId;
-    private FirebaseFirestore mFirestore, mFirestore2, mFirestore3, mFirestore4;
+    private FirebaseFirestore mFirestore, mFirestore2, mFirestore3, mFirestore4, mFirestore5, mFirestore6;
     private FirebaseAuth mAuth;
 
 
@@ -55,6 +55,8 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
         mFirestore2 = FirebaseFirestore.getInstance();
         mFirestore3 = FirebaseFirestore.getInstance();
         mFirestore4 = FirebaseFirestore.getInstance();
+        mFirestore5 = FirebaseFirestore.getInstance();
+        mFirestore6 = FirebaseFirestore.getInstance();
         classValue = FacultySubjectTeacherDetails.getClassValue();
         holder.subject.setText(subjectList.get(position).getSubject());
         holder.from.setText(subjectList.get(position).getFrom());
@@ -122,9 +124,20 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
                                                 mFirestore2.collection("Faculty").document(user_id).collection("Subject").document(classValue).collection("Monday").document(subject_id).set(subjectMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
-                                                        Toast.makeText(context, "Subject is assigned to You. Long Press To Remove The Subject.", Toast.LENGTH_SHORT).show();
-                                                        holder.subject.setTextColor(Color.rgb(244, 67, 54));
-                                                        holder.takenByValue.setText(facultyName);
+                                                        Map<String, Object> subjectMap1 = new HashMap<>();
+                                                        subjectMap1.put("subject", subjectList.get(position).getSubject());
+                                                        subjectMap1.put("to", subjectList.get(position).getTo());
+                                                        subjectMap1.put("from", subjectList.get(position).getFrom());
+                                                        subjectMap1.put("classValue", classValue);
+                                                        subjectMap1.put("day", "Monday");
+                                                        mFirestore5.collection("Faculty").document(user_id).collection("Subjects").document(subject_id).set(subjectMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                Toast.makeText(context, "Subject is assigned to You. Long Press To Remove The Subject.", Toast.LENGTH_SHORT).show();
+                                                                holder.subject.setTextColor(Color.rgb(244, 67, 54));
+                                                                holder.takenByValue.setText(facultyName);
+                                                            }
+                                                        });
                                                     }
                                                 });
                                             }
@@ -165,9 +178,20 @@ public class MondaySubjectRecyclerAdapter extends RecyclerView.Adapter<MondaySub
                                                 mFirestore2.collection("Faculty").document(takenBy).collection("Subject").document(classValue).collection("Monday").document(subject_id).update(subjectMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
-                                                        Toast.makeText(context, "Subject is Removed.", Toast.LENGTH_SHORT).show();
-                                                        holder.subject.setTextColor(Color.BLACK);
-                                                        holder.takenByValue.setText("No Data");
+                                                        Map<String, Object> subjectMap1 = new HashMap<>();
+                                                        subjectMap1.put("subject", FieldValue.delete());
+                                                        subjectMap1.put("to", FieldValue.delete());
+                                                        subjectMap1.put("from", FieldValue.delete());
+                                                        subjectMap1.put("classValue", FieldValue.delete());
+                                                        subjectMap1.put("day", FieldValue.delete());
+                                                        mFirestore6.collection("Faculty").document(user_id).collection("Subjects").document(subject_id).update(subjectMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                Toast.makeText(context, "Subject is Removed.", Toast.LENGTH_SHORT).show();
+                                                                holder.subject.setTextColor(Color.BLACK);
+                                                                holder.takenByValue.setText("No Data");
+                                                            }
+                                                        });
                                                     }
                                                 });
                                             }

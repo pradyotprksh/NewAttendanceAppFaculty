@@ -88,10 +88,51 @@ public class ClassRecyclerAdapter extends RecyclerView.Adapter<ClassRecyclerAdap
                             if (task.getResult().exists()) {
                                 try {
                                     classTeacherOf = task.getResult().getString("classTeacherOf");
-                                    if (!classTeacherOf.equals(classList.get(position).getClassValue())) {
-                                        Toast.makeText(context, "You Are Already The Class Teacher " + classTeacherOf, Toast.LENGTH_SHORT).show();
+                                    if (!classTeacherOf.equals("No Data Selected")) {
+                                        if (!classTeacherOf.equals(classList.get(position).getClassValue())) {
+                                            Toast.makeText(context, "You Are Already The Class Teacher " + classTeacherOf, Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(context, "You Are Already The Class Teacher Of This Class. Long Press To Remove it.", Toast.LENGTH_LONG).show();
+                                        }
                                     } else {
-                                        Toast.makeText(context, "You Are Already The Class Teacher Of This Class. Long Press To Remove it.", Toast.LENGTH_LONG).show();
+                                        mFirestore2.collection("Class").document(branch).collection(semester).document(classId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    if (task.getResult().exists()) {
+                                                        try {
+                                                            String faculty_id = task.getResult().getString("facultyId");
+                                                            if (faculty_id.equals(user_id)) {
+                                                                Toast.makeText(context, "You Are Already The Class Teacher Of " + classList.get(position).getClassValue() + ". Long Press To Remove it.", Toast.LENGTH_LONG).show();
+                                                            } else {
+                                                                Toast.makeText(context, "Someone Else Is The Class Teacher Of " + classList.get(position).getClassValue(), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        } catch (Exception e) {
+                                                            Map<String, Object> classMap = new HashMap<>();
+                                                            classMap.put("facultyId", user_id);
+                                                            mFirestore.collection("Class").document(branch).collection(semester).document(classId).update(classMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Map<String, Object> classMapValue = new HashMap<>();
+                                                                    classMapValue.put("classTeacherOf", classList.get(position).getClassValue());
+                                                                    mFirestore1.collection("Faculty").document(user_id).update(classMapValue).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                        @Override
+                                                                        public void onSuccess(Void aVoid) {
+                                                                            Toast.makeText(context, "You Are Now The Class Teacher Of " + classList.get(position).getClassValue(), Toast.LENGTH_SHORT).show();
+                                                                            holder.classValue.setTextColor(Color.rgb(244, 67, 54));
+                                                                        }
+                                                                    });
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                } else {
+                                                    String retrieving_error = task.getException().getMessage();
+                                                    Toast.makeText(context, "Error: " + retrieving_error, Toast.LENGTH_SHORT).show();
+                                                }
+                                                holder.mView.setClickable(true);
+                                            }
+                                        });
                                     }
                                 } catch (Exception e) {
                                     mFirestore2.collection("Class").document(branch).collection(semester).document(classId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
