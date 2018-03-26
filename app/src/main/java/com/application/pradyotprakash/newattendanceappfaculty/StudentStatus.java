@@ -1,5 +1,6 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -31,14 +32,15 @@ public class StudentStatus extends AppCompatActivity {
 
     private static String subject, studentid, name, className;
     private CircleImageView studentImage;
-    private TextView studentName, studentUsn, studentBranch, studentSemester, studentClass, studentSubject;
+    private TextView studentName, studentUsn, studentBranch, studentSemester, studentClass, studentSubject, studentDaysPresent, studentPercentage;
     private FirebaseFirestore studentInformationFirestore;
     private Uri studentImageURI = null;
     private Button sendMessage;
     private RecyclerView studentStatus;
     private List<StudentsStatus> studentsList;
     private StudentsStatusRecyclerAdapter studentRecyclerAdapter;
-    private FirebaseFirestore mFirestore;
+    private FirebaseFirestore mFirestore, mFirestore1;
+    private Double days, percentage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,8 @@ public class StudentStatus extends AppCompatActivity {
         studentClass = findViewById(R.id.student_class);
         sendMessage = findViewById(R.id.send_message);
         studentSubject = findViewById(R.id.student_subject);
+        studentDaysPresent = findViewById(R.id.student_days_present);
+        studentPercentage = findViewById(R.id.student_percentage);
         studentInformationFirestore = FirebaseFirestore.getInstance();
         studentInformationFirestore
                 .collection("Student")
@@ -84,6 +88,26 @@ public class StudentStatus extends AppCompatActivity {
                         } catch (Exception e) {
                             Toast.makeText(StudentStatus.this, "...", Toast.LENGTH_SHORT).show();
                         }
+                        mFirestore1 = FirebaseFirestore.getInstance();
+                        mFirestore1.collection("Attendance").document(className).collection(subject).document(studentid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    if (task.getResult().exists()) {
+                                        days = task.getResult().getDouble("daysAttended");
+                                        percentage = task.getResult().getDouble("percentage");
+                                        studentDaysPresent.setText(String.valueOf(days));
+                                        studentPercentage.setText(String.valueOf(percentage));
+                                        if (percentage < 75.0) {
+                                            studentPercentage.setTextColor(Color.rgb(244, 67, 54));
+                                        }
+                                    } else {
+                                        studentDaysPresent.setText("0");
+                                        studentPercentage.setText("0.0");
+                                    }
+                                }
+                            }
+                        });
                         mFirestore = FirebaseFirestore.getInstance();
                         studentsList = new ArrayList<>();
                         studentRecyclerAdapter = new StudentsStatusRecyclerAdapter(getApplicationContext(), studentsList);

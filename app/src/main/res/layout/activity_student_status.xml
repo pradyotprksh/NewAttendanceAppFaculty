@@ -8,13 +8,14 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/student_image"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:src="@mipmap/default_profile_picture"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.064"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,14 +25,15 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/loading_name"
         android:textColor="@android:color/black"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/student_image" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/student_usn"
@@ -45,7 +47,7 @@
         android:textSize="25sp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/student_name" />
 
@@ -55,11 +57,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="288dp"
+        android:layout_marginTop="124dp"
         android:text="@string/loading_branch"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.072"
+        app:layout_constraintHorizontal_bias="0.095"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -69,11 +71,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="2dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="328dp"
+        android:layout_marginTop="164dp"
         android:text="@string/loading_class"
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.852"
+        app:layout_constraintHorizontal_bias="0.878"
         app:layout_constraintStart_toEndOf="@+id/student_branch"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -81,13 +83,21 @@
         android:id="@+id/student_subject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="256dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="328dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="164dp"
         android:text="Loading Subject..."
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/student_days_present"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="200dp"
+        android:text="Loading Days Present..."
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -97,11 +107,25 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="2dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="288dp"
+        android:layout_marginTop="124dp"
         android:text="@string/loading_semester"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.852"
+        app:layout_constraintHorizontal_bias="0.82"
+        app:layout_constraintStart_toEndOf="@+id/student_branch"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/student_percentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="200dp"
+        android:text="Loading Percentage..."
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.82"
         app:layout_constraintStart_toEndOf="@+id/student_branch"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -127,11 +151,11 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/border"
         app:layout_constraintBottom_toTopOf="@+id/send_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/student_subject" />
+        app:layout_constraintTop_toBottomOf="@+id/student_days_present" />
 
 </android.support.constraint.ConstraintLayout>

@@ -35,10 +35,10 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
 
     private List<Students> studentsList;
     private Context context;
-    private FirebaseFirestore mFirestore, mFirestore1, mFirestore2;
+    private FirebaseFirestore mFirestore, mFirestore1, mFirestore2, mFirestore3;
     final String subjectclass = StudentAttendanceList.getSubject();
     final String classvalue = StudentAttendanceList.getClassValue();
-    private double totalDays;
+    private double totalDays, studentDays, percentage;
 
     public StudentRecyclerAdapter(Context context, List<Students> studentsList) {
         this.studentsList = studentsList;
@@ -64,6 +64,7 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
         mFirestore = FirebaseFirestore.getInstance();
         mFirestore1 = FirebaseFirestore.getInstance();
         mFirestore2 = FirebaseFirestore.getInstance();
+        mFirestore3 = FirebaseFirestore.getInstance();
         if (classvalue.equals(studentsList.get(position).getClassName())) {
             mFirestore1.collection("Attendance").document(classvalue).collection(subjectclass).document("TotalClass").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -73,6 +74,18 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
                             totalDays = task.getResult().getDouble("totalDays");
                         } else {
                             totalDays = 0.0;
+                        }
+                    }
+                }
+            });
+            mFirestore3.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().exists()) {
+                            studentDays = task.getResult().getDouble("daysAttended");
+                        } else {
+                            studentDays = 0.0;
                         }
                     }
                 }
@@ -94,7 +107,17 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
                     mFirestore.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).collection(student_id).document().set(attendancePresent).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(context, "Present", Toast.LENGTH_SHORT).show();
+                            studentDays = studentDays + 1;
+                            percentage = Double.parseDouble(String.format("%.2f", studentDays / totalDays));
+                            Map<String, Object> studentAttendance = new HashMap<>();
+                            studentAttendance.put("daysAttended", studentDays);
+                            studentAttendance.put("percentage", percentage);
+                            mFirestore2.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).update(studentAttendance).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(context, "Present", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     });
                 }
@@ -113,7 +136,17 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
                     mFirestore.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).collection(student_id).document().set(attendancePresent).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(context, "Absent", Toast.LENGTH_SHORT).show();
+                            studentDays = studentDays + 0;
+                            percentage = Double.parseDouble(String.format("%.2f", studentDays / totalDays));
+                            Map<String, Object> studentAttendance = new HashMap<>();
+                            studentAttendance.put("daysAttended", studentDays);
+                            studentAttendance.put("percentage", percentage);
+                            mFirestore2.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).update(studentAttendance).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(context, "Absent", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     });
                 }
@@ -125,12 +158,6 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
                     intent.putExtra("subject", subjectclass);
                     intent.putExtra("studentid", student_id);
                     context.startActivity(intent);
-                }
-            });
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context, "Complete: " + student_id, Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
