@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,17 +23,19 @@ import java.util.List;
 public class StudentAttendanceList extends AppCompatActivity {
 
     private Toolbar mToolbar;
-    private RecyclerView mStudentListView;
+    private RecyclerView mStudentListView, mStudentListViewEithAttendance;
     private static String classValue;
     private static String subject;
     private static String from;
     private static String to;
     private static String whichDay;
     private String name;
+    private Button takeAttendance, notTakeAttendance, doneTakeAttendance;
     private TextView classValueText, subjectText, fromText, toText, nameText;
-    private List<Students> studentsList;
+    private List<Students> studentsList, studentList1;
     private StudentRecyclerAdapter studentRecyclerAdapter;
-    private FirebaseFirestore mFirestore;
+    private StudentRecyclerAdapterWoAttendance studentRecyclerAdapter1;
+    private FirebaseFirestore mFirestore, mFirestore1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,25 +55,83 @@ public class StudentAttendanceList extends AppCompatActivity {
         fromText = findViewById(R.id.fromValue);
         toText = findViewById(R.id.toValue);
         nameText = findViewById(R.id.nameValue);
+        takeAttendance = findViewById(R.id.takeAttendance);
+        notTakeAttendance = findViewById(R.id.notTakeAttendance);
+        doneTakeAttendance = findViewById(R.id.doneTakeAttendance);
         classValueText.setText(classValue);
         subjectText.setText(subject);
         fromText.setText(from);
         toText.setText(to);
         nameText.setText(name);
-        mStudentListView = findViewById(R.id.studentList);
+        mStudentListViewEithAttendance = findViewById(R.id.studentListWithAttendance);
         mFirestore = FirebaseFirestore.getInstance();
         studentsList = new ArrayList<>();
         studentsList.clear();
         studentRecyclerAdapter = new StudentRecyclerAdapter(getApplicationContext(), studentsList);
+        mStudentListViewEithAttendance.setHasFixedSize(true);
+        mStudentListViewEithAttendance.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        mStudentListViewEithAttendance.setAdapter(studentRecyclerAdapter);
+        mStudentListViewEithAttendance.setVisibility(View.INVISIBLE);
+        mStudentListView = findViewById(R.id.studentList);
+        mFirestore1 = FirebaseFirestore.getInstance();
+        studentList1 = new ArrayList<>();
+        studentList1.clear();
+        studentRecyclerAdapter1 = new StudentRecyclerAdapterWoAttendance(getApplicationContext(), studentsList);
         mStudentListView.setHasFixedSize(true);
         mStudentListView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        mStudentListView.setAdapter(studentRecyclerAdapter);
+        mStudentListView.setAdapter(studentRecyclerAdapter1);
+        notTakeAttendance.setVisibility(View.INVISIBLE);
+        doneTakeAttendance.setVisibility(View.INVISIBLE);
+        takeAttendance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mStudentListViewEithAttendance.setVisibility(View.VISIBLE);
+                mStudentListView.setVisibility(View.INVISIBLE);
+                takeAttendance.setVisibility(View.INVISIBLE);
+                notTakeAttendance.setVisibility(View.VISIBLE);
+                doneTakeAttendance.setVisibility(View.VISIBLE);
+            }
+        });
+        notTakeAttendance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mStudentListViewEithAttendance.setVisibility(View.INVISIBLE);
+                mStudentListView.setVisibility(View.VISIBLE);
+                takeAttendance.setVisibility(View.VISIBLE);
+                notTakeAttendance.setVisibility(View.INVISIBLE);
+                doneTakeAttendance.setVisibility(View.INVISIBLE);
+            }
+        });
+        doneTakeAttendance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mStudentListViewEithAttendance.setVisibility(View.INVISIBLE);
+                mStudentListView.setVisibility(View.VISIBLE);
+                takeAttendance.setVisibility(View.VISIBLE);
+                notTakeAttendance.setVisibility(View.INVISIBLE);
+                doneTakeAttendance.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         studentsList.clear();
+        studentList1.clear();
+        mFirestore1.collection("Student").orderBy("usn").addSnapshotListener(StudentAttendanceList.this, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
+                    if (doc.getType() == DocumentChange.Type.ADDED) {
+                        String student_id = doc.getDocument().getId();
+                        Students students = doc.getDocument().toObject(Students.class).withId(student_id);
+                        studentList1.add(students);
+                        studentRecyclerAdapter1.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
         mFirestore.collection("Student").orderBy("usn").addSnapshotListener(StudentAttendanceList.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {

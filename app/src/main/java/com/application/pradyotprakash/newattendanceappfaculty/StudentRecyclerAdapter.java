@@ -2,6 +2,7 @@ package com.application.pradyotprakash.newattendanceappfaculty;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -31,9 +35,10 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
 
     private List<Students> studentsList;
     private Context context;
-    private FirebaseFirestore mFirestore;
+    private FirebaseFirestore mFirestore, mFirestore1, mFirestore2;
     final String subjectclass = StudentAttendanceList.getSubject();
     final String classvalue = StudentAttendanceList.getClassValue();
+    private double totalDays;
 
     public StudentRecyclerAdapter(Context context, List<Students> studentsList) {
         this.studentsList = studentsList;
@@ -57,7 +62,21 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
         final String currentDateTimeString = sdf.format(d);
         mFirestore = FirebaseFirestore.getInstance();
+        mFirestore1 = FirebaseFirestore.getInstance();
+        mFirestore2 = FirebaseFirestore.getInstance();
         if (classvalue.equals(studentsList.get(position).getClassName())) {
+            mFirestore1.collection("Attendance").document(classvalue).collection(subjectclass).document("TotalClass").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().exists()) {
+                            totalDays = task.getResult().getDouble("totalDays");
+                        } else {
+                            totalDays = 0.0;
+                        }
+                    }
+                }
+            });
             holder.mUsn.setText(studentsList.get(position).getUsn());
             CircleImageView mImageView = holder.mImage;
             Glide.with(context).load(studentsList.get(position).getImage()).into(mImageView);
