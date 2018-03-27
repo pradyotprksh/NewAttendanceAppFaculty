@@ -26,7 +26,7 @@ import java.util.List;
 public class HomeFragment extends Fragment {
 
     private FirebaseAuth mAuth;
-    private String user_id;
+    private static String user_id;
     private RecyclerView mSubjectListView;
     private List<TodayTimetable> subjectList;
     private TodayTimetableRecyclerAdapter subjectRecyclerAdapter;
@@ -67,4 +67,7 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    public static String getUser_id() {
+        return user_id;
+    }
 }
