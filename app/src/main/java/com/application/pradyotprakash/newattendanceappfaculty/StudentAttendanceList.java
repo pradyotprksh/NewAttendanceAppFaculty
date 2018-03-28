@@ -110,7 +110,7 @@ public class StudentAttendanceList extends AppCompatActivity {
                 totalDays = totalDays + 1;
                 Map<String, Object> totalClass = new HashMap<>();
                 totalClass.put("totalDays", totalDays);
-                mFirestore3.collection("Attendance").document(classValue).collection(subject).document("TotalClass").update(totalClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+                mFirestore3.collection("Attendance").document(classValue).collection(subject).document("TotalClass").set(totalClass).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         mStudentListViewEithAttendance.setVisibility(View.VISIBLE);
@@ -128,7 +128,7 @@ public class StudentAttendanceList extends AppCompatActivity {
                 totalDays = totalDays - 1;
                 Map<String, Object> totalClass = new HashMap<>();
                 totalClass.put("totalDays", totalDays);
-                mFirestore3.collection("Attendance").document(classValue).collection(subject).document("TotalClass").update(totalClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+                mFirestore3.collection("Attendance").document(classValue).collection(subject).document("TotalClass").set(totalClass).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         mStudentListViewEithAttendance.setVisibility(View.INVISIBLE);

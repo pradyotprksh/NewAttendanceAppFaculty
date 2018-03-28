@@ -50,49 +50,49 @@ public class TodayTimetableRecyclerAdapter extends RecyclerView.Adapter<TodayTim
                 if (task.isSuccessful()) {
                     if (task.getResult().exists()) {
                         name = task.getResult().getString("name");
-                        classValue = subjectList.get(position).getClassValue();
-                        subject = subjectList.get(position).getSubject();
-                        from = subjectList.get(position).getFrom();
-                        to = subjectList.get(position).getTo();
-                        day = subjectList.get(position).getDay();
-                        todayDay = getCurrentDay();
-                        if (todayDay.equals("Sunday")) {
-                            String from = subjectList.get(position).getFrom();
-                            String to = subjectList.get(position).getTo();
-                            String timing = from + " - " + to;
-                            holder.subject.setText(subjectList.get(position).getSubject());
-                            holder.classValue.setText(subjectList.get(position).getClassValue());
-                            holder.timing.setText(timing);
-                            holder.dayValue.setText(subjectList.get(position).getDay());
-                        } else {
-                            if (subjectList.get(position).getDay().equals(todayDay)) {
-                                String from = subjectList.get(position).getFrom();
-                                String to = subjectList.get(position).getTo();
-                                String timing = from + " - " + to;
-                                holder.subject.setText(subjectList.get(position).getSubject());
-                                holder.classValue.setText(subjectList.get(position).getClassValue());
-                                holder.timing.setText(timing);
-                                holder.dayValue.setVisibility(View.GONE);
-                            } else {
-                                holder.mView.setVisibility(View.INVISIBLE);
-                                holder.mView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-                            }
-                        }
-                        holder.mView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(context, StudentAttendanceList.class);
-                                intent.putExtra("classValue", classValue);
-                                intent.putExtra("subject", subject);
-                                intent.putExtra("from", from);
-                                intent.putExtra("to", to);
-                                intent.putExtra("name", name);
-                                intent.putExtra("whichDay", day);
-                                context.startActivity(intent);
-                            }
-                        });
                     }
                 }
+            }
+        });
+        classValue = subjectList.get(position).getClassValue();
+        subject = subjectList.get(position).getSubject();
+        from = subjectList.get(position).getFrom();
+        to = subjectList.get(position).getTo();
+        day = subjectList.get(position).getDay();
+        todayDay = getCurrentDay();
+        if (todayDay.equals("Sunday")) {
+            String from = subjectList.get(position).getFrom();
+            String to = subjectList.get(position).getTo();
+            String timing = from + " - " + to;
+            holder.subject.setText(subjectList.get(position).getSubject());
+            holder.classValue.setText(subjectList.get(position).getClassValue());
+            holder.timing.setText(timing);
+            holder.dayValue.setText(subjectList.get(position).getDay());
+        } else {
+            if (subjectList.get(position).getDay().equals(todayDay)) {
+                String from = subjectList.get(position).getFrom();
+                String to = subjectList.get(position).getTo();
+                String timing = from + " - " + to;
+                holder.subject.setText(subjectList.get(position).getSubject());
+                holder.classValue.setText(subjectList.get(position).getClassValue());
+                holder.timing.setText(timing);
+                holder.dayValue.setVisibility(View.GONE);
+            } else {
+                holder.mView.setVisibility(View.INVISIBLE);
+                holder.mView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+            }
+        }
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, StudentAttendanceList.class);
+                intent.putExtra("classValue", classValue);
+                intent.putExtra("subject", subject);
+                intent.putExtra("from", from);
+                intent.putExtra("to", to);
+                intent.putExtra("name", name);
+                intent.putExtra("whichDay", day);
+                context.startActivity(intent);
             }
         });
     }

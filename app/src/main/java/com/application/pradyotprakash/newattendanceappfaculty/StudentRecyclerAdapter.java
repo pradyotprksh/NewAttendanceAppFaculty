@@ -66,18 +66,6 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
         mFirestore2 = FirebaseFirestore.getInstance();
         mFirestore3 = FirebaseFirestore.getInstance();
         if (classvalue.equals(studentsList.get(position).getClassName())) {
-            mFirestore1.collection("Attendance").document(classvalue).collection(subjectclass).document("TotalClass").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().exists()) {
-                            totalDays = task.getResult().getDouble("totalDays");
-                        } else {
-                            totalDays = 0.0;
-                        }
-                    }
-                }
-            });
             mFirestore3.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -101,21 +89,44 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
                     attendancePresent.put("date", date);
                     attendancePresent.put("from", from);
                     attendancePresent.put("to", to);
-                    attendancePresent.put("date", date);
                     attendancePresent.put("time", currentDateTimeString);
                     attendancePresent.put("weekDay", whichDay);
                     mFirestore.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).collection(student_id).document().set(attendancePresent).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            studentDays = studentDays + 1;
-                            percentage = Double.parseDouble(String.format("%.2f", studentDays / totalDays));
-                            Map<String, Object> studentAttendance = new HashMap<>();
-                            studentAttendance.put("daysAttended", studentDays);
-                            studentAttendance.put("percentage", percentage);
-                            mFirestore2.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).update(studentAttendance).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            mFirestore1.collection("Attendance").document(classvalue).collection(subjectclass).document("TotalClass").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(context, "Present", Toast.LENGTH_SHORT).show();
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        if (task.getResult().exists()) {
+                                            totalDays = task.getResult().getDouble("totalDays");
+                                        } else {
+                                            totalDays = 0.0;
+                                        }
+                                        mFirestore3.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    if (task.getResult().exists()) {
+                                                        studentDays = task.getResult().getDouble("daysAttended");
+                                                    } else {
+                                                        studentDays = 0.0;
+                                                    }
+                                                    studentDays = studentDays + 1;
+                                                    percentage = (studentDays / totalDays) * 100;
+                                                    Map<String, Object> studentAttendance = new HashMap<>();
+                                                    studentAttendance.put("daysAttended", studentDays);
+                                                    studentAttendance.put("percentage", percentage);
+                                                    mFirestore2.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).set(studentAttendance).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Toast.makeText(context, "Present", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    }
                                 }
                             });
                         }
@@ -130,21 +141,43 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
                     attendancePresent.put("date", date);
                     attendancePresent.put("from", from);
                     attendancePresent.put("to", to);
-                    attendancePresent.put("date", date);
                     attendancePresent.put("time", currentDateTimeString);
                     attendancePresent.put("weekDay", whichDay);
                     mFirestore.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).collection(student_id).document().set(attendancePresent).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            studentDays = studentDays + 0;
-                            percentage = Double.parseDouble(String.format("%.2f", studentDays / totalDays));
-                            Map<String, Object> studentAttendance = new HashMap<>();
-                            studentAttendance.put("daysAttended", studentDays);
-                            studentAttendance.put("percentage", percentage);
-                            mFirestore2.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).update(studentAttendance).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            mFirestore1.collection("Attendance").document(classvalue).collection(subjectclass).document("TotalClass").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(context, "Absent", Toast.LENGTH_SHORT).show();
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        if (task.getResult().exists()) {
+                                            totalDays = task.getResult().getDouble("totalDays");
+                                        } else {
+                                            totalDays = 0.0;
+                                        }
+                                        mFirestore3.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    if (task.getResult().exists()) {
+                                                        studentDays = task.getResult().getDouble("daysAttended");
+                                                    } else {
+                                                        studentDays = 0.0;
+                                                    }
+                                                    percentage = (studentDays / totalDays) * 100;
+                                                    Map<String, Object> studentAttendance = new HashMap<>();
+                                                    studentAttendance.put("daysAttended", studentDays);
+                                                    studentAttendance.put("percentage", percentage);
+                                                    mFirestore2.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).set(studentAttendance).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Toast.makeText(context, "Absent", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    }
                                 }
                             });
                         }

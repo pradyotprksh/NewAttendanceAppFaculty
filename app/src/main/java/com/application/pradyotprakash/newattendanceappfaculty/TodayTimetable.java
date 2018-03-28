@@ -8,8 +8,6 @@ public class TodayTimetable {
 
     private String classValue, day, from, subject, to;
 
-    public TodayTimetable() {
-    }
 
     public TodayTimetable(String classValue, String day, String from, String subject, String to) {
         this.classValue = classValue;
@@ -17,6 +15,10 @@ public class TodayTimetable {
         this.from = from;
         this.subject = subject;
         this.to = to;
+    }
+
+    public TodayTimetable() {
+
     }
 
     public String getClassValue() {
