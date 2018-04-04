@@ -102,7 +102,7 @@ public class DetailsFragment extends Fragment {
         proctorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FacultyProctorDetails.class);
+                Intent intent = new Intent(getActivity(), SelectSemesterClassProctor.class);
                 intent.putExtra("branch", branch);
                 startActivity(intent);
             }

@@ -35,5 +35,5 @@
     <string name="loading_branch">Loading Branch...</string>
     <string name="loading_class">Loading Class...</string>
     <string name="loading_semester">Loading Semester...</string>
-    <string name="send_message_each_student">Send Message...</string>
+    <string name="send_message_each_student">Send Message</string>
 </resources>
