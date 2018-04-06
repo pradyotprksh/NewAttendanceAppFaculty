@@ -1,6 +1,7 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -59,7 +60,9 @@ public class ProctorStudentRecyclerAdapter extends RecyclerView.Adapter<ProctorS
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(context, StudentDetailsProctor.class);
+                intent.putExtra("studentId", studentId);
+                context.startActivity(intent);
             }
         });
     }

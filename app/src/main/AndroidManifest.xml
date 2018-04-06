@@ -63,6 +63,7 @@
         <activity
             android:name=".ProctorStudentList"
             android:screenOrientation="portrait" />
+        <activity android:name=".StudentDetailsProctor"></activity>
     </application>
 
 </manifest>
