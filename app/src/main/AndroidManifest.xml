@@ -54,9 +54,15 @@
         <activity
             android:name=".StudentAttendanceList"
             android:screenOrientation="portrait" />
-        <activity android:name=".StudentStatus" />
-        <activity android:name=".SelectSemesterClassProctor" />
-        <activity android:name=".ProctorStudentList"></activity>
+        <activity
+            android:name=".StudentStatus"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SelectSemesterClassProctor"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ProctorStudentList"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

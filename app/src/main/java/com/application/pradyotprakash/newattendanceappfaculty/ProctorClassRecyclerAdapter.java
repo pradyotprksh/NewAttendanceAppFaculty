@@ -33,7 +33,7 @@ public class ProctorClassRecyclerAdapter extends RecyclerView.Adapter<ProctorCla
             @Override
             public void onClick(View v) {
                 String classValue = classList.get(position).getClassValue();
-                Intent intent = new Intent(context, ProctorStudentList.class);
+                Intent intent = new Intent(context, FacultyProctorDetails.class);
                 intent.putExtra("classValue",classValue);
                 context.startActivity(intent);
             }
