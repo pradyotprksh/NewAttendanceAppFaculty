@@ -37,9 +37,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name=".FacultyClassTeacherDetails"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".FacultySubjectTeacherDetails"
             android:screenOrientation="portrait" />
         <activity

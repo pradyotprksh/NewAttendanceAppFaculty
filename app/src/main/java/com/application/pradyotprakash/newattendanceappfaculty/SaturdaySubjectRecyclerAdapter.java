@@ -31,8 +31,8 @@ public class SaturdaySubjectRecyclerAdapter extends RecyclerView.Adapter<Saturda
 
     private List<MondaySubjects> subjectList;
     private Context context;
-    private String classValue, user_id, facultyName, takenByUserId;
-    private FirebaseFirestore mFirestore, mFirestore2, mFirestore3, mFirestore4, mFirestore5, mFirestore6;
+    private String user_id, takenByUserId;
+    private FirebaseFirestore mFirestore4;
     private FirebaseAuth mAuth;
 
 
@@ -42,27 +42,24 @@ public class SaturdaySubjectRecyclerAdapter extends RecyclerView.Adapter<Saturda
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SaturdaySubjectRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.monday_subject_list, parent, false);
-        return new ViewHolder(view);
+        return new SaturdaySubjectRecyclerAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final SaturdaySubjectRecyclerAdapter.ViewHolder holder, final int position) {
+        final String subject_id = subjectList.get(position).subjectId;
         mAuth = FirebaseAuth.getInstance();
         user_id = mAuth.getCurrentUser().getUid();
-        mFirestore = FirebaseFirestore.getInstance();
-        mFirestore2 = FirebaseFirestore.getInstance();
-        mFirestore3 = FirebaseFirestore.getInstance();
         mFirestore4 = FirebaseFirestore.getInstance();
-        mFirestore5 = FirebaseFirestore.getInstance();
-        mFirestore6 = FirebaseFirestore.getInstance();
-        classValue = FacultySubjectTeacherDetails.getClassValue();
-        holder.subject.setText(subjectList.get(position).getSubject());
-        holder.from.setText(subjectList.get(position).getFrom());
-        holder.to.setText(subjectList.get(position).getTo());
-        takenByUserId = subjectList.get(position).getTakenBy();
-        final String subject_id = subjectList.get(position).subjectId;
+        holder.subject.setText(subjectList.get(position).getSubjectName());
+        String from = subjectList.get(position).getFrom();
+        String to = subjectList.get(position).getTo();
+        String timeValue = from + " : " + to;
+        holder.time.setText(timeValue);
+        holder.subjectCode.setText(subjectList.get(position).getSubjectCode());
+        takenByUserId = subjectList.get(position).getSubjectTeacher();
         mFirestore4.collection("Faculty").document(takenByUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -81,136 +78,6 @@ public class SaturdaySubjectRecyclerAdapter extends RecyclerView.Adapter<Saturda
         } catch (Exception e) {
             holder.subject.setTextColor(Color.BLACK);
         }
-        mFirestore3.collection("Faculty").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    if (task.getResult().exists()) {
-                        facultyName = task.getResult().getString("name");
-                    }
-                }
-            }
-        });
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "Wait For A Moment.", Toast.LENGTH_SHORT).show();
-                mFirestore4.collection("Timetable").document(classValue).collection("Saturday").document(subject_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().exists()) {
-                                String takenBy = task.getResult().getString("takenBy");
-                                try {
-                                    if (takenBy.equals(user_id)) {
-                                        Intent intent = new Intent(context, StudentAttendanceList.class);
-                                        intent.putExtra("classValue", classValue);
-                                        intent.putExtra("subject", subjectList.get(position).getSubject());
-                                        intent.putExtra("from", subjectList.get(position).getFrom());
-                                        intent.putExtra("to", subjectList.get(position).getTo());
-                                        intent.putExtra("name", facultyName);
-                                        intent.putExtra("whichDay", "Saturday");
-                                        context.startActivity(intent);
-                                    } else if (takenBy.equals("Not Assigned")) {
-                                        Map<String, Object> classMap = new HashMap<>();
-                                        classMap.put("takenBy", user_id);
-                                        mFirestore.collection("Timetable").document(classValue).collection("Saturday").document(subject_id).update(classMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Map<String, Object> subjectMap = new HashMap<>();
-                                                subjectMap.put("subject", subjectList.get(position).getSubject());
-                                                subjectMap.put("to", subjectList.get(position).getTo());
-                                                subjectMap.put("from", subjectList.get(position).getFrom());
-                                                mFirestore2.collection("Faculty").document(user_id).collection("Subject").document(classValue).collection("Saturday").document(subject_id).set(subjectMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        Map<String, Object> subjectMap1 = new HashMap<>();
-                                                        subjectMap1.put("subject", subjectList.get(position).getSubject());
-                                                        subjectMap1.put("to", subjectList.get(position).getTo());
-                                                        subjectMap1.put("from", subjectList.get(position).getFrom());
-                                                        subjectMap1.put("classValue", classValue);
-                                                        subjectMap1.put("day", "Saturday");
-                                                        mFirestore5.collection("Faculty").document(user_id).collection("Subjects").document(subject_id).set(subjectMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                Toast.makeText(context, "Subject is assigned to You. Long Press To Remove The Subject.", Toast.LENGTH_SHORT).show();
-                                                                holder.subject.setTextColor(Color.rgb(244, 67, 54));
-                                                                holder.takenByValue.setText(facultyName);
-                                                            }
-                                                        });
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    } else {
-                                        Toast.makeText(context, "This Subject Is Assigned To Other Faculty. You cannot make any changes.", Toast.LENGTH_SHORT).show();
-                                    }
-                                } catch (Exception e) {
-                                    Toast.makeText(context, "No One Is Assigned To This Subject. Tap To Assign This Subject To You.", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        });
-        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(context, "Wait For A Moment.", Toast.LENGTH_SHORT).show();
-                mFirestore4.collection("Timetable").document(classValue).collection("Saturday").document(subject_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().exists()) {
-                                final String takenBy = task.getResult().getString("takenBy");
-                                try {
-                                    if (takenBy.equals(user_id)) {
-                                        Map<String, Object> classMap = new HashMap<>();
-                                        classMap.put("takenBy", "Not Assigned");
-                                        mFirestore.collection("Timetable").document(classValue).collection("Saturday").document(subject_id).update(classMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Map<String, Object> subjectMap = new HashMap<>();
-                                                subjectMap.put("subject", FieldValue.delete());
-                                                subjectMap.put("to", FieldValue.delete());
-                                                subjectMap.put("from", FieldValue.delete());
-                                                mFirestore2.collection("Faculty").document(takenBy).collection("Subject").document(classValue).collection("Saturday").document(subject_id).update(subjectMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        Map<String, Object> subjectMap1 = new HashMap<>();
-                                                        subjectMap1.put("subject", FieldValue.delete());
-                                                        subjectMap1.put("to", FieldValue.delete());
-                                                        subjectMap1.put("from", FieldValue.delete());
-                                                        subjectMap1.put("classValue", FieldValue.delete());
-                                                        subjectMap1.put("day", FieldValue.delete());
-                                                        mFirestore6.collection("Faculty").document(user_id).collection("Subjects").document(subject_id).update(subjectMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                Toast.makeText(context, "Subject is Removed.", Toast.LENGTH_SHORT).show();
-                                                                holder.subject.setTextColor(Color.BLACK);
-                                                                holder.takenByValue.setText("No Data");
-                                                            }
-                                                        });
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    } else if (takenBy.equals("Not Assigned")) {
-                                        Toast.makeText(context, "No One Is Assigned To This Subject. Tap To Assign This Subject To You.", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(context, "This Subject Is Assigned To Other Faculty. You cannot make any changes.", Toast.LENGTH_SHORT).show();
-                                    }
-                                } catch (Exception e) {
-                                    Toast.makeText(context, "No One Is Assigned To This Subject. Tap To Assign This Subject To You.", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-                    }
-                });
-                return true;
-            }
-        });
     }
 
     @Override
@@ -220,16 +87,15 @@ public class SaturdaySubjectRecyclerAdapter extends RecyclerView.Adapter<Saturda
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private View mView;
-        private TextView subject, from, to, takenByValue;
+        private TextView subject, time, takenByValue, subjectCode;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
             subject = mView.findViewById(R.id.subject_value);
-            from = mView.findViewById(R.id.from_value);
-            to = mView.findViewById(R.id.to_value);
+            time = mView.findViewById(R.id.time_value);
             takenByValue = mView.findViewById(R.id.taken_by_value);
+            subjectCode = mView.findViewById(R.id.subject_code);
         }
     }
-
 }

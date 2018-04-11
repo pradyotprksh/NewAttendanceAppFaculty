@@ -65,7 +65,7 @@ public class HomeFragment extends Fragment {
         mSubjectListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mSubjectListView.setAdapter(subjectRecyclerAdapter);
         mFirestore = FirebaseFirestore.getInstance();
-        mFirestore.collection("Faculty").document(user_id).collection("Subjects").orderBy("from").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+        mFirestore.collection("Faculty").document(user_id).collection("Timetable").orderBy("from").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                 for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {

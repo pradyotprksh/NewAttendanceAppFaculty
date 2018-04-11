@@ -27,8 +27,8 @@ public class DetailsFragment extends Fragment {
     private FirebaseFirestore mFirestore;
     private String user_id, branch;
     private FirebaseAuth mAuth;
-    private String classTeacher = "false", subjectTeacher = "false", proctor = "false", staff = "false", classTeacherOfValue;
-    private Button classBtn, subjectBtn, proctorBtn, staffbtn;
+    private String classTeacher = "false", proctor = "false", classTeacherOfValue;
+    private Button subjectBtn, proctorBtn;
     private TextView classTeacherOf;
 
     public DetailsFragment() {
@@ -44,51 +44,25 @@ public class DetailsFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         user_id = mAuth.getCurrentUser().getUid();
         mFirestore = FirebaseFirestore.getInstance();
-        classBtn = view.findViewById(R.id.classTeacher);
         subjectBtn = view.findViewById(R.id.subjectTeacher);
         proctorBtn = view.findViewById(R.id.proctor);
-        staffbtn = view.findViewById(R.id.staff);
         classTeacherOf = view.findViewById(R.id.classTeacherOf);
-        classBtn.setVisibility(View.GONE);
-        subjectBtn.setVisibility(View.GONE);
-        proctorBtn.setVisibility(View.GONE);
-        staffbtn.setVisibility(View.GONE);
-        classTeacherOf.setVisibility(View.GONE);
         mFirestore.collection("Faculty").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     if (task.getResult().exists()) {
                         classTeacher = task.getResult().getString("classTeacherValue");
-                        subjectTeacher = task.getResult().getString("subjectTeacherValue");
                         proctor = task.getResult().getString("proctorValue");
-                        staff = task.getResult().getString("staffValue");
                         branch = task.getResult().getString("branch");
                         if (classTeacher.equals("true")) {
-                            classBtn.setVisibility(View.VISIBLE);
-                            classTeacherOf.setVisibility(View.VISIBLE);
                             classTeacherOfValue = task.getResult().getString("classTeacherOf");
-                            classTeacherOf.setText("You Are The Class Teacher Of : " + classTeacherOfValue);
-                        }
-                        if (subjectTeacher.equals("true")) {
-                            subjectBtn.setVisibility(View.VISIBLE);
-                        }
-                        if (proctor.equals("true")) {
-                            proctorBtn.setVisibility(View.VISIBLE);
-                        }
-                        if (staff.equals("true")) {
-                            staffbtn.setVisibility(View.VISIBLE);
+                            classTeacherOf.setText("You are assigned as a class teacher of : " + classTeacherOfValue);
+                        } else {
+                            classTeacherOf.setText("You Are Not A Class Teacher");
                         }
                     }
                 }
-            }
-        });
-        classBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FacultyClassTeacherDetails.class);
-                intent.putExtra("branch", branch);
-                startActivity(intent);
             }
         });
         subjectBtn.setOnClickListener(new View.OnClickListener() {
@@ -103,14 +77,6 @@ public class DetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProctorStudentList.class);
-                intent.putExtra("branch", branch);
-                startActivity(intent);
-            }
-        });
-        staffbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FacultyStaffDetails.class);
                 intent.putExtra("branch", branch);
                 startActivity(intent);
             }

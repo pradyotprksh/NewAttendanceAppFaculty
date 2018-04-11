@@ -5,21 +5,18 @@ package com.application.pradyotprakash.newattendanceappfaculty;
  */
 
 public class MondaySubjects extends SubjectId{
-    String subject, from, to, takenBy;
+    String from, subjectCode, subjectName, subjectTeacher, to, weekDay;
 
-    public MondaySubjects(String subject, String from, String to, String takenBy) {
-        this.subject = subject;
+    public MondaySubjects() {
+    }
+
+    public MondaySubjects(String from, String subjectCode, String subjectName, String subjectTeacher, String to, String weekDay) {
         this.from = from;
+        this.subjectCode = subjectCode;
+        this.subjectName = subjectName;
+        this.subjectTeacher = subjectTeacher;
         this.to = to;
-        this.takenBy = takenBy;
-    }
-
-    public String getTakenBy() {
-        return takenBy;
-    }
-
-    public void setTakenBy(String takenBy) {
-        this.takenBy = takenBy;
+        this.weekDay = weekDay;
     }
 
     public String getFrom() {
@@ -30,6 +27,30 @@ public class MondaySubjects extends SubjectId{
         this.from = from;
     }
 
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public String getSubjectTeacher() {
+        return subjectTeacher;
+    }
+
+    public void setSubjectTeacher(String subjectTeacher) {
+        this.subjectTeacher = subjectTeacher;
+    }
+
     public String getTo() {
         return to;
     }
@@ -38,15 +59,11 @@ public class MondaySubjects extends SubjectId{
         this.to = to;
     }
 
-    public MondaySubjects() {
-
+    public String getWeekDay() {
+        return weekDay;
     }
 
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setWeekDay(String weekDay) {
+        this.weekDay = weekDay;
     }
 }

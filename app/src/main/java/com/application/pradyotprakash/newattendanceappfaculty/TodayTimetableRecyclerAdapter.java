@@ -55,25 +55,25 @@ public class TodayTimetableRecyclerAdapter extends RecyclerView.Adapter<TodayTim
             }
         });
         classValue = subjectList.get(position).getClassValue();
-        subject = subjectList.get(position).getSubject();
+        subject = subjectList.get(position).getSubjectName();
         from = subjectList.get(position).getFrom();
         to = subjectList.get(position).getTo();
-        day = subjectList.get(position).getDay();
+        day = subjectList.get(position).getWeekDay();
         todayDay = getCurrentDay();
         if (todayDay.equals("Sunday")) {
             String from = subjectList.get(position).getFrom();
             String to = subjectList.get(position).getTo();
             String timing = from + " - " + to;
-            holder.subject.setText(subjectList.get(position).getSubject());
+            holder.subject.setText(subjectList.get(position).getSubjectName());
             holder.classValue.setText(subjectList.get(position).getClassValue());
             holder.timing.setText(timing);
-            holder.dayValue.setText(subjectList.get(position).getDay());
+            holder.dayValue.setText(subjectList.get(position).getWeekDay());
         } else {
-            if (subjectList.get(position).getDay().equals(todayDay)) {
+            if (subjectList.get(position).getWeekDay().equals(todayDay)) {
                 String from = subjectList.get(position).getFrom();
                 String to = subjectList.get(position).getTo();
                 String timing = from + " - " + to;
-                holder.subject.setText(subjectList.get(position).getSubject());
+                holder.subject.setText(subjectList.get(position).getSubjectName());
                 holder.classValue.setText(subjectList.get(position).getClassValue());
                 holder.timing.setText(timing);
                 holder.dayValue.setVisibility(View.GONE);

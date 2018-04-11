@@ -28,7 +28,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class StudentDetailsProctor extends AppCompatActivity {
 
     private CircleImageView studentImage;
-    private TextView studentName, studentUsn, studentBranch, studentSemester, studentClass, studentProctor;
+    private TextView studentName, studentUsn, studentBranch, studentSemester, studentProctor;
     private Uri studentImageURI = null;
     private String studentId, name, className, proctorId, proctorName;
     private FirebaseFirestore studentInformationFirestore, proctorInformationFirestore;
@@ -43,7 +43,6 @@ public class StudentDetailsProctor extends AppCompatActivity {
         studentUsn = findViewById(R.id.student_usn);
         studentBranch = findViewById(R.id.student_branch);
         studentSemester = findViewById(R.id.student_semester);
-        studentClass = findViewById(R.id.student_class);
         studentProctor = findViewById(R.id.student_proctor);
         studentInformationFirestore = FirebaseFirestore.getInstance();
         proctorInformationFirestore = FirebaseFirestore.getInstance();
@@ -66,7 +65,6 @@ public class StudentDetailsProctor extends AppCompatActivity {
                         studentUsn.setText(usn);
                         studentBranch.setText(branch);
                         studentSemester.setText(semester);
-                        studentClass.setText(className);
                         RequestOptions placeHolderRequest = new RequestOptions();
                         placeHolderRequest.placeholder(R.mipmap.default_profile_picture);
                         try {

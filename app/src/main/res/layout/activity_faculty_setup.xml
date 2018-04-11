@@ -94,79 +94,57 @@
         app:layout_constraintStart_toEndOf="@+id/faculty_setup_branch"
         app:layout_constraintVertical_bias="0.714" />
 
-    <TextView
-        android:id="@+id/selector"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:padding="10dp"
-        android:text="Select The Post:"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/faculty_setup_branch" />
-
     <CheckBox
         android:id="@+id/classTeacherOption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="36dp"
         android:checked="false"
         android:text="Class Teacher"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selector" />
-
-    <CheckBox
-        android:id="@+id/subjectTeacherOption"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:checked="false"
-        android:text="Subject Teacher"
-        app:layout_constraintStart_toEndOf="@+id/classTeacherOption"
-        app:layout_constraintTop_toBottomOf="@+id/selector" />
+        app:layout_constraintTop_toBottomOf="@+id/faculty_setup_branch" />
 
     <CheckBox
         android:id="@+id/proctorOption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="260dp"
+        android:layout_marginTop="36dp"
         android:checked="false"
         android:text="Proctor"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/classTeacherOption" />
-
-    <CheckBox
-        android:id="@+id/staffOption"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:checked="false"
-        android:text="Staff"
-        app:layout_constraintStart_toEndOf="@+id/classTeacherOption"
-        app:layout_constraintTop_toBottomOf="@+id/subjectTeacherOption" />
+        app:layout_constraintTop_toBottomOf="@+id/faculty_setup_branch" />
 
     <Button
         android:id="@+id/faculty_setup_btn"
-        android:layout_width="0dp"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="163dp"
-        android:layout_marginStart="160dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="96dp"
         android:backgroundTint="@color/colorAccent"
         android:padding="16dp"
         android:text="@string/faculty_setup_btn_text"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/staffOption" />
+        app:layout_constraintTop_toBottomOf="@+id/faculty_setup_branch" />
+
+    <Button
+        android:id="@+id/faculty_editsetup_btn"
+        android:layout_width="146dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="236dp"
+        android:layout_marginTop="96dp"
+        android:backgroundTint="@color/colorAccent"
+        android:padding="16dp"
+        android:text="Edit Details"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/faculty_setup_branch" />
 
     <ProgressBar
         android:id="@+id/faculty_setup_progress"

@@ -6,19 +6,18 @@ package com.application.pradyotprakash.newattendanceappfaculty;
 
 public class TodayTimetable {
 
-    private String classValue, day, from, subject, to;
-
-
-    public TodayTimetable(String classValue, String day, String from, String subject, String to) {
-        this.classValue = classValue;
-        this.day = day;
-        this.from = from;
-        this.subject = subject;
-        this.to = to;
-    }
+    private String classValue, weekDay, from, subjectName, subjectCode, to;
 
     public TodayTimetable() {
+    }
 
+    public TodayTimetable(String classValue, String weekDay, String from, String subjectName, String subjectCode, String to) {
+        this.classValue = classValue;
+        this.weekDay = weekDay;
+        this.from = from;
+        this.subjectName = subjectName;
+        this.subjectCode = subjectCode;
+        this.to = to;
     }
 
     public String getClassValue() {
@@ -29,12 +28,12 @@ public class TodayTimetable {
         this.classValue = classValue;
     }
 
-    public String getDay() {
-        return day;
+    public String getWeekDay() {
+        return weekDay;
     }
 
-    public void setDay(String day) {
-        this.day = day;
+    public void setWeekDay(String weekDay) {
+        this.weekDay = weekDay;
     }
 
     public String getFrom() {
@@ -45,12 +44,20 @@ public class TodayTimetable {
         this.from = from;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getSubjectName() {
+        return subjectName;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
     }
 
     public String getTo() {
@@ -60,5 +67,4 @@ public class TodayTimetable {
     public void setTo(String to) {
         this.to = to;
     }
-
 }
