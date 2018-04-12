@@ -35,7 +35,8 @@ public class StudentDetailsProctor extends AppCompatActivity {
     private CircleImageView studentImage;
     private TextView studentName, studentUsn, studentBranch, studentSemester, studentProctor, studentClass, studentClassTeacher;
     private Uri studentImageURI = null;
-    private String studentId, name, className, proctorId, proctorName, branch, semester;
+    private String name, className, proctorId, proctorName, branch, semester;
+    private static String studentId;
     private FirebaseFirestore studentInformationFirestore, proctorInformationFirestore, mFirestore, mFirestore1, mFirestore2;
     private RecyclerView mSubjectListView;
     private List<StudentSubjects> subjectList;
@@ -155,9 +156,7 @@ public class StudentDetailsProctor extends AppCompatActivity {
         mSubjectListView.addItemDecoration(horizontalDecoration);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
+    public static String getStudentId() {
+        return studentId;
     }
 }

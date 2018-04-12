@@ -1,6 +1,7 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ public class StudentSubjectRecyclerAdapter extends RecyclerView.Adapter<StudentS
 
     private List<StudentSubjects> subjectList;
     private Context context;
+    private String studentId = StudentDetailsProctor.getStudentId();
 
     public StudentSubjectRecyclerAdapter(List<StudentSubjects> subjectList, Context context) {
         this.subjectList = subjectList;
@@ -31,7 +33,10 @@ public class StudentSubjectRecyclerAdapter extends RecyclerView.Adapter<StudentS
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(context, EachSubjectStudentDetails.class);
+                intent.putExtra("subjectCode", subjectList.get(position).getSubjectCode());
+                intent.putExtra("studentId", studentId);
+                context.startActivity(intent);
             }
         });
     }
