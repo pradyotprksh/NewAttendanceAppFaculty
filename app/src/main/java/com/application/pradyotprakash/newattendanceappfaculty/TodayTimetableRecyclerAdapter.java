@@ -88,6 +88,7 @@ public class TodayTimetableRecyclerAdapter extends RecyclerView.Adapter<TodayTim
                 Intent intent = new Intent(context, StudentAttendanceList.class);
                 intent.putExtra("classValue", classValue);
                 intent.putExtra("subject", subject);
+                intent.putExtra("subjectCode", subjectList.get(position).getSubjectCode());
                 intent.putExtra("from", from);
                 intent.putExtra("to", to);
                 intent.putExtra("name", name);

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -36,6 +37,7 @@ public class StudentAttendanceList extends AppCompatActivity {
     private static String from;
     private static String to;
     private static String whichDay;
+    private static String subjectCode;
     private String name;
     private Button takeAttendance, notTakeAttendance, doneTakeAttendance;
     private TextView classValueText, subjectText, fromText, toText, nameText;
@@ -43,7 +45,9 @@ public class StudentAttendanceList extends AppCompatActivity {
     private StudentRecyclerAdapter studentRecyclerAdapter;
     private StudentRecyclerAdapterWoAttendance studentRecyclerAdapter1;
     private FirebaseFirestore mFirestore, mFirestore1, mFirestore2, mFirestore3;
-    private double totalDays;
+    private static double totalDays;
+    private String user_id;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,7 @@ public class StudentAttendanceList extends AppCompatActivity {
         to = getIntent().getStringExtra("to");
         name = getIntent().getStringExtra("name");
         whichDay = getIntent().getStringExtra("whichDay");
+        subjectCode = getIntent().getStringExtra("subjectCode");
         classValueText = findViewById(R.id.classValue);
         subjectText = findViewById(R.id.subjectValue);
         fromText = findViewById(R.id.fromValue);
@@ -90,13 +95,19 @@ public class StudentAttendanceList extends AppCompatActivity {
         mStudentListView.setAdapter(studentRecyclerAdapter1);
         notTakeAttendance.setVisibility(View.INVISIBLE);
         doneTakeAttendance.setVisibility(View.INVISIBLE);
+        mAuth = FirebaseAuth.getInstance();
+        user_id = mAuth.getCurrentUser().getUid();
         mFirestore2 = FirebaseFirestore.getInstance();
-        mFirestore2.collection("Attendance").document(classValue).collection(subject).document("TotalClass").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        mFirestore2.collection("Faculty").document(user_id).collection("Subjects").document(subjectCode).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     if (task.getResult().exists()) {
-                        totalDays = task.getResult().getDouble("totalDays");
+                        try {
+                            totalDays = task.getResult().getDouble("totalDays");
+                        } catch (Exception e) {
+                            totalDays = 0.0;
+                        }
                     } else {
                         totalDays = 0.0;
                     }
@@ -110,7 +121,7 @@ public class StudentAttendanceList extends AppCompatActivity {
                 totalDays = totalDays + 1;
                 Map<String, Object> totalClass = new HashMap<>();
                 totalClass.put("totalDays", totalDays);
-                mFirestore3.collection("Attendance").document(classValue).collection(subject).document("TotalClass").set(totalClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+                mFirestore2.collection("Faculty").document(user_id).collection("Subjects").document(subjectCode).update(totalClass).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         mStudentListViewEithAttendance.setVisibility(View.VISIBLE);
@@ -128,7 +139,7 @@ public class StudentAttendanceList extends AppCompatActivity {
                 totalDays = totalDays - 1;
                 Map<String, Object> totalClass = new HashMap<>();
                 totalClass.put("totalDays", totalDays);
-                mFirestore3.collection("Attendance").document(classValue).collection(subject).document("TotalClass").set(totalClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+                mFirestore2.collection("Faculty").document(user_id).collection("Subjects").document(subjectCode).update(totalClass).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         mStudentListViewEithAttendance.setVisibility(View.INVISIBLE);
@@ -203,5 +214,13 @@ public class StudentAttendanceList extends AppCompatActivity {
 
     public static String getWhichDay() {
         return whichDay;
+    }
+
+    public static String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public static double getTotalDays() {
+        return totalDays;
     }
 }

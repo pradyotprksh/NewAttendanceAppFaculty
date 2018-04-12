@@ -10,16 +10,26 @@ public class Students extends StudentId {
     String image;
     String branch;
     String className;
+    String semester;
 
-    public Students(String usn, String image, String branch, String className) {
+    public Students(String usn, String image, String branch, String className, String semester) {
         this.usn = usn;
         this.image = image;
         this.branch = branch;
         this.className = className;
+        this.semester = semester;
     }
 
     public Students() {
 
+    }
+
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
     }
 
     public String getClassName() {

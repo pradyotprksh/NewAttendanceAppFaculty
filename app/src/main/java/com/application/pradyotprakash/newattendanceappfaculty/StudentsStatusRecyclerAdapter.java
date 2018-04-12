@@ -54,11 +54,10 @@ public class StudentsStatusRecyclerAdapter extends RecyclerView.Adapter<Students
         mFirestore = FirebaseFirestore.getInstance();
         mFirestore1 = FirebaseFirestore.getInstance();
         holder.dateValue.setText(day);
-        String value = statusList.get(position).getValue();
-        if (value.equals("present")) {
+        if (statusList.get(position).getValue().equals("Present")) {
             holder.statusValue.setText("Present");
             holder.statusValue.setTextColor(Color.BLUE);
-        } else if (value.equals("absent")) {
+        } else {
             holder.statusValue.setText("Absent");
             holder.statusValue.setTextColor(Color.rgb(244, 67, 54));
         }
@@ -70,37 +69,7 @@ public class StudentsStatusRecyclerAdapter extends RecyclerView.Adapter<Students
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFirestore1.collection("Attendance").document(className).collection(subject).document(studentId).collection(studentId).document(statusId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            currentValue = task.getResult().getString("value");
-                            if (currentValue.equals("present")) {
-                                Map<String, Object> newStatus = new HashMap<>();
-                                newStatus.put("value", "absent");
-                                mFirestore.collection("Attendance").document(className).collection(subject).document(studentId).collection(studentId).document(statusId).update(newStatus).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Toast.makeText(context, "Changed To Absent", Toast.LENGTH_SHORT).show();
-                                        holder.statusValue.setText("Absent");
-                                        holder.statusValue.setTextColor(Color.rgb(244, 67, 54));
-                                    }
-                                });
-                            } else {
-                                Map<String, Object> newStatus = new HashMap<>();
-                                newStatus.put("value", "present");
-                                mFirestore.collection("Attendance").document(className).collection(subject).document(studentId).collection(studentId).document(statusId).update(newStatus).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Toast.makeText(context, "Changed To Present", Toast.LENGTH_SHORT).show();
-                                        holder.statusValue.setText("Present");
-                                        holder.statusValue.setTextColor(Color.BLUE);
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
+                Toast.makeText(context, statusList.get(position).getValue(), Toast.LENGTH_SHORT).show();
             }
         });
     }

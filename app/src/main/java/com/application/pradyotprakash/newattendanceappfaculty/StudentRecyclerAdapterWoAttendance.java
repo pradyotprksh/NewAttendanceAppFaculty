@@ -22,7 +22,7 @@ public class StudentRecyclerAdapterWoAttendance extends RecyclerView.Adapter<Stu
 
     private List<Students> studentsList;
     private Context context;
-    final String subjectclass = StudentAttendanceList.getSubject();
+    final String subjectCode = StudentAttendanceList.getSubjectCode();
 
     public StudentRecyclerAdapterWoAttendance(Context context, List<Students> studentsList) {
         this.studentsList = studentsList;
@@ -45,7 +45,7 @@ public class StudentRecyclerAdapterWoAttendance extends RecyclerView.Adapter<Stu
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, StudentStatus.class);
-                intent.putExtra("subject", subjectclass);
+                intent.putExtra("subject", subjectCode);
                 intent.putExtra("studentid", student_id);
                 context.startActivity(intent);
             }

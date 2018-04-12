@@ -40,7 +40,7 @@ public class StudentStatus extends AppCompatActivity {
     private List<StudentsStatus> studentsList;
     private StudentsStatusRecyclerAdapter studentRecyclerAdapter;
     private FirebaseFirestore mFirestore, mFirestore1;
-    private Double days, percentage;
+    private Double days, percentage, totalDays;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,6 @@ public class StudentStatus extends AppCompatActivity {
         setContentView(R.layout.activity_student_status);
         subject = getIntent().getStringExtra("subject");
         studentid = getIntent().getStringExtra("studentid");
-        studentStatus = findViewById(R.id.student_status);
         studentImage = findViewById(R.id.student_image);
         studentName = findViewById(R.id.student_name);
         studentUsn = findViewById(R.id.student_usn);
@@ -89,14 +88,15 @@ public class StudentStatus extends AppCompatActivity {
                             Toast.makeText(StudentStatus.this, "...", Toast.LENGTH_SHORT).show();
                         }
                         mFirestore1 = FirebaseFirestore.getInstance();
-                        mFirestore1.collection("Attendance").document(className).collection(subject).document(studentid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        mFirestore1.collection("Student").document(studentid).collection(semester).document("Attendance").collection(subject).document("Details").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
                                     if (task.getResult().exists()) {
+                                        totalDays = task.getResult().getDouble("totalDays");
                                         days = task.getResult().getDouble("daysAttended");
                                         percentage = task.getResult().getDouble("percentage");
-                                        studentDaysPresent.setText(String.valueOf(days));
+                                        studentDaysPresent.setText(String.valueOf(days + " out of " + totalDays));
                                         studentPercentage.setText(String.valueOf(percentage));
                                         if (percentage < 75.0) {
                                             studentPercentage.setTextColor(Color.rgb(244, 67, 54));
@@ -109,13 +109,14 @@ public class StudentStatus extends AppCompatActivity {
                             }
                         });
                         mFirestore = FirebaseFirestore.getInstance();
+                        studentStatus = findViewById(R.id.student_status);
                         studentsList = new ArrayList<>();
                         studentRecyclerAdapter = new StudentsStatusRecyclerAdapter(getApplicationContext(), studentsList);
                         studentStatus.setHasFixedSize(true);
                         studentStatus.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         studentStatus.setAdapter(studentRecyclerAdapter);
                         studentsList.clear();
-                        mFirestore.collection("Attendance").document(className).collection(subject).document(studentid).collection(studentid).orderBy("value", Query.Direction.ASCENDING).addSnapshotListener(StudentStatus.this, new EventListener<QuerySnapshot>() {
+                        mFirestore1.collection("Student").document(studentid).collection(semester).document("Attendance").collection(subject).document("Absent").collection("Absent").orderBy("date").addSnapshotListener(StudentStatus.this, new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                                 for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {

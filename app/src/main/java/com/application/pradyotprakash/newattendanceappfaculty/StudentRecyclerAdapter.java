@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -36,9 +37,11 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
     private List<Students> studentsList;
     private Context context;
     private FirebaseFirestore mFirestore, mFirestore1, mFirestore2, mFirestore3;
-    final String subjectclass = StudentAttendanceList.getSubject();
+    final String subjectCode = StudentAttendanceList.getSubjectCode();
     final String classvalue = StudentAttendanceList.getClassValue();
     private double totalDays, studentDays, percentage;
+    private String user_id;
+    private FirebaseAuth mAuth;
 
     public StudentRecyclerAdapter(Context context, List<Students> studentsList) {
         this.studentsList = studentsList;
@@ -52,7 +55,7 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final String whichDay = StudentAttendanceList.getWhichDay();
         final String from = StudentAttendanceList.getFrom();
         final String to = StudentAttendanceList.getTo();
@@ -65,15 +68,23 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
         mFirestore1 = FirebaseFirestore.getInstance();
         mFirestore2 = FirebaseFirestore.getInstance();
         mFirestore3 = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        user_id = mAuth.getCurrentUser().getUid();
+        mFirestore2 = FirebaseFirestore.getInstance();
         if (classvalue.equals(studentsList.get(position).getClassName())) {
-            mFirestore3.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            mFirestore3.collection("Student").document(student_id).collection(studentsList.get(position).getSemester()).document("Attendance").collection(subjectCode).document("Details").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         if (task.getResult().exists()) {
-                            studentDays = task.getResult().getDouble("daysAttended");
+                            try {
+                                studentDays = task.getResult().getDouble("daysAttended");
+                            } catch (Exception e) {
+                                studentDays = 0.0;
+                            }
                         } else {
                             studentDays = 0.0;
+
                         }
                     }
                 }
@@ -84,51 +95,28 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
             holder.present.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Map<String, Object> attendancePresent = new HashMap<>();
-                    attendancePresent.put("value", "present");
-                    attendancePresent.put("date", date);
-                    attendancePresent.put("from", from);
-                    attendancePresent.put("to", to);
-                    attendancePresent.put("time", currentDateTimeString);
-                    attendancePresent.put("weekDay", whichDay);
-                    mFirestore.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).collection(student_id).document().set(attendancePresent).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    mFirestore2.collection("Faculty").document(user_id).collection("Subjects").document(subjectCode).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            mFirestore1.collection("Attendance").document(classvalue).collection(subjectclass).document("TotalClass").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        if (task.getResult().exists()) {
-                                            totalDays = task.getResult().getDouble("totalDays");
-                                        } else {
-                                            totalDays = 0.0;
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                if (task.getResult().exists()) {
+                                    totalDays = task.getResult().getDouble("totalDays");
+                                    studentDays = studentDays + 1;
+                                    percentage = (studentDays / totalDays) * 100;
+                                    HashMap<String, Object> presentMap = new HashMap<>();
+                                    presentMap.put("totalDays", totalDays);
+                                    presentMap.put("daysAttended", studentDays);
+                                    presentMap.put("percentage", percentage);
+                                    mFirestore.collection("Student").document(student_id).collection(studentsList.get(position).getSemester()).document("Attendance").collection(subjectCode).document("Details").set(presentMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(context, "Present", Toast.LENGTH_SHORT).show();
+                                            holder.absent.setEnabled(false);
+                                            holder.present.setEnabled(false);
                                         }
-                                        mFirestore3.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                if (task.isSuccessful()) {
-                                                    if (task.getResult().exists()) {
-                                                        studentDays = task.getResult().getDouble("daysAttended");
-                                                    } else {
-                                                        studentDays = 0.0;
-                                                    }
-                                                    studentDays = studentDays + 1;
-                                                    percentage = (studentDays / totalDays) * 100;
-                                                    Map<String, Object> studentAttendance = new HashMap<>();
-                                                    studentAttendance.put("daysAttended", studentDays);
-                                                    studentAttendance.put("percentage", percentage);
-                                                    mFirestore2.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).set(studentAttendance).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            Toast.makeText(context, "Present", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        });
-                                    }
+                                    });
                                 }
-                            });
+                            }
                         }
                     });
                 }
@@ -136,61 +124,43 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
             holder.absent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Map<String, Object> attendancePresent = new HashMap<>();
-                    attendancePresent.put("value", "absent");
-                    attendancePresent.put("date", date);
-                    attendancePresent.put("from", from);
-                    attendancePresent.put("to", to);
-                    attendancePresent.put("time", currentDateTimeString);
-                    attendancePresent.put("weekDay", whichDay);
-                    mFirestore.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).collection(student_id).document().set(attendancePresent).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    mFirestore2.collection("Faculty").document(user_id).collection("Subjects").document(subjectCode).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            mFirestore1.collection("Attendance").document(classvalue).collection(subjectclass).document("TotalClass").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        if (task.getResult().exists()) {
-                                            totalDays = task.getResult().getDouble("totalDays");
-                                        } else {
-                                            totalDays = 0.0;
-                                        }
-                                        mFirestore3.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                if (task.isSuccessful()) {
-                                                    if (task.getResult().exists()) {
-                                                        studentDays = task.getResult().getDouble("daysAttended");
-                                                    } else {
-                                                        studentDays = 0.0;
-                                                    }
-                                                    percentage = (studentDays / totalDays) * 100;
-                                                    Map<String, Object> studentAttendance = new HashMap<>();
-                                                    studentAttendance.put("daysAttended", studentDays);
-                                                    studentAttendance.put("percentage", percentage);
-                                                    mFirestore2.collection("Attendance").document(classvalue).collection(subjectclass).document(student_id).set(studentAttendance).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            Toast.makeText(context, "Absent", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                if (task.getResult().exists()) {
+                                    totalDays = task.getResult().getDouble("totalDays");
+                                    studentDays = studentDays + 0;
+                                    percentage = (studentDays / totalDays) * 100;
+                                    HashMap<String, Object> presentMap = new HashMap<>();
+                                    presentMap.put("totalDays", totalDays);
+                                    presentMap.put("daysAttended", studentDays);
+                                    presentMap.put("percentage", percentage);
+                                    mFirestore.collection("Student").document(student_id).collection(studentsList.get(position).getSemester()).document("Attendance").collection(subjectCode).document("Details").set(presentMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            HashMap<String, Object> absentMap = new HashMap<>();
+                                            absentMap.put("weekDay", whichDay);
+                                            absentMap.put("from", from);
+                                            absentMap.put("to", to);
+                                            absentMap.put("date", date);
+                                            absentMap.put("time", currentDateTimeString);
+                                            absentMap.put("value", "Absent");
+                                            absentMap.put("semester", studentsList.get(position).getSemester());
+                                            mFirestore1.collection("Student").document(student_id).collection(studentsList.get(position).getSemester()).document("Attendance").collection(subjectCode).document("Absent").collection("Absent").document().set(absentMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(context, "Present", Toast.LENGTH_SHORT).show();
+                                                    holder.present.setEnabled(false);
+                                                    holder.absent.setEnabled(false);
                                                 }
-                                            }
-                                        });
-                                    }
+                                            });
+                                        }
+                                    });
                                 }
-                            });
+                            }
                         }
                     });
-                }
-            });
-            holder.stats.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, StudentStatus.class);
-                    intent.putExtra("subject", subjectclass);
-                    intent.putExtra("studentid", student_id);
-                    context.startActivity(intent);
                 }
             });
         } else {
@@ -209,7 +179,7 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
         private View mView;
         private CircleImageView mImage;
         private TextView mUsn;
-        private Button present, absent, stats;
+        private Button present, absent;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -218,8 +188,6 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
             mUsn = mView.findViewById(R.id.student_list_usn);
             present = mView.findViewById(R.id.present);
             absent = mView.findViewById(R.id.absent);
-            stats = mView.findViewById(R.id.stats);
-
         }
     }
 
