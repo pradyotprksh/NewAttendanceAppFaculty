@@ -1,5 +1,6 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,9 +33,9 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
     private ImageView internalSpinner;
     private static final String[] branch = new String[]{"Internal 1", "Internal 2", "Internal 3"};
     private EditText marksObtainedValue, totalMarksValue;
-    private FirebaseFirestore mFirestore, mFirestore2, mFirestore1;
-    private int marksObtained, totalMarks, internal1, internal2, internal3;
-    private Button updateMarks;
+    private FirebaseFirestore mFirestore, mFirestore2, mFirestore1, mFirestore3, mFirestore4;
+    private int marksObtained, totalMarks, internal1, internal2, internal3, averageValue;
+    private Button updateMarks, calculateAverage;
     private String internalSelectedValue;
     private TextView currentAverage;
 
@@ -63,7 +64,6 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
                 internalValues.showDropDown();
             }
         });
-        mFirestore = FirebaseFirestore.getInstance();
         internalValues.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -79,10 +79,16 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
                                     if (task.getResult().exists()) {
-                                        marksObtained = Integer.valueOf(task.getResult().getString("marksObtained"));
-                                        totalMarks = Integer.valueOf(task.getResult().getString("totalMarks"));
-                                        marksObtainedValue.setText(String.valueOf(marksObtained));
-                                        totalMarksValue.setText(String.valueOf(totalMarks));
+                                        if (task.getResult().getString("marksObtained").equals("AB")) {
+                                            totalMarks = Integer.valueOf(task.getResult().getString("totalMarks"));
+                                            marksObtainedValue.setText(task.getResult().getString("marksObtained"));
+                                            totalMarksValue.setText(String.valueOf(totalMarks));
+                                        } else {
+                                            marksObtained = Integer.valueOf(task.getResult().getString("marksObtained"));
+                                            totalMarks = Integer.valueOf(task.getResult().getString("totalMarks"));
+                                            marksObtainedValue.setText(String.valueOf(marksObtained));
+                                            totalMarksValue.setText(String.valueOf(totalMarks));
+                                        }
                                     }
                                 }
                             }
@@ -99,10 +105,16 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
                                     if (task.getResult().exists()) {
-                                        marksObtained = Integer.valueOf(task.getResult().getString("marksObtained"));
-                                        totalMarks = Integer.valueOf(task.getResult().getString("totalMarks"));
-                                        marksObtainedValue.setText(String.valueOf(marksObtained));
-                                        totalMarksValue.setText(String.valueOf(totalMarks));
+                                        if (task.getResult().getString("marksObtained").equals("AB")) {
+                                            totalMarks = Integer.valueOf(task.getResult().getString("totalMarks"));
+                                            marksObtainedValue.setText(task.getResult().getString("marksObtained"));
+                                            totalMarksValue.setText(String.valueOf(totalMarks));
+                                        } else {
+                                            marksObtained = Integer.valueOf(task.getResult().getString("marksObtained"));
+                                            totalMarks = Integer.valueOf(task.getResult().getString("totalMarks"));
+                                            marksObtainedValue.setText(String.valueOf(marksObtained));
+                                            totalMarksValue.setText(String.valueOf(totalMarks));
+                                        }
                                     }
                                 }
                             }
@@ -119,10 +131,16 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
                                     if (task.getResult().exists()) {
-                                        marksObtained = Integer.valueOf(task.getResult().getString("marksObtained"));
-                                        totalMarks = Integer.valueOf(task.getResult().getString("totalMarks"));
-                                        marksObtainedValue.setText(String.valueOf(marksObtained));
-                                        totalMarksValue.setText(String.valueOf(totalMarks));
+                                        if (task.getResult().getString("marksObtained").equals("AB")) {
+                                            totalMarks = Integer.valueOf(task.getResult().getString("totalMarks"));
+                                            marksObtainedValue.setText(task.getResult().getString("marksObtained"));
+                                            totalMarksValue.setText(String.valueOf(totalMarks));
+                                        } else {
+                                            marksObtained = Integer.valueOf(task.getResult().getString("marksObtained"));
+                                            totalMarks = Integer.valueOf(task.getResult().getString("totalMarks"));
+                                            marksObtainedValue.setText(String.valueOf(marksObtained));
+                                            totalMarksValue.setText(String.valueOf(totalMarks));
+                                        }
                                     }
                                 }
                             }
@@ -145,29 +163,118 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(internalSelectedValue) && !(TextUtils.isEmpty(marksObtainedValue.getText().toString())) && !(TextUtils.isEmpty(totalMarksValue.getText().toString()))) {
-                    if (Integer.valueOf(marksObtainedValue.getText().toString()) > Integer.valueOf(totalMarksValue.getText().toString())) {
+                    if (marksObtainedValue.getText().toString().equals("ab") || marksObtainedValue.getText().toString().equals("AB")) {
+                        HashMap<String, Object> internalMarks = new HashMap<>();
+                        internalMarks.put("marksObtained", marksObtainedValue.getText().toString().toUpperCase());
+                        internalMarks.put("totalMarks", totalMarksValue.getText().toString());
+                        mFirestore2.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document(internalSelectedValue).set(internalMarks).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(EachSubjectStudentInternalMarks.this, "Marks Entered For " + internalSelectedValue, Toast.LENGTH_SHORT).show();
+                                marksObtainedValue.setText("");
+                            }
+                        });
+                    } else if (Integer.valueOf(marksObtainedValue.getText().toString()) > Integer.valueOf(totalMarksValue.getText().toString())) {
                         Toast.makeText(EachSubjectStudentInternalMarks.this, "Marks Obtained is Greater than Total Marks.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        HashMap<String, Object> internalMarks = new HashMap<>();
+                        internalMarks.put("marksObtained", marksObtainedValue.getText().toString());
+                        internalMarks.put("totalMarks", totalMarksValue.getText().toString());
+                        mFirestore2.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document(internalSelectedValue).set(internalMarks).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(EachSubjectStudentInternalMarks.this, "Marks Entered For " + internalSelectedValue, Toast.LENGTH_SHORT).show();
+                                marksObtainedValue.setText("");
+                            }
+                        });
                     }
-                    HashMap<String, Object> internalMarks = new HashMap<>();
-                    internalMarks.put("marksObtained", marksObtainedValue.getText().toString());
-                    internalMarks.put("totalMarks", totalMarksValue.getText().toString());
-                    mFirestore2.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document(internalSelectedValue).set(internalMarks).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(EachSubjectStudentInternalMarks.this, "Marks Entered For " + internalSelectedValue, Toast.LENGTH_SHORT).show();
-                            marksObtainedValue.setText("");
-                        }
-                    });
+                    if (!marksObtainedValue.getText().toString().equals("ab") || !marksObtainedValue.getText().toString().equals("AB")) {
+                        Toast.makeText(EachSubjectStudentInternalMarks.this, "Use AB or ab for Absent.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(EachSubjectStudentInternalMarks.this, "Enter The Details.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+        mFirestore = FirebaseFirestore.getInstance();
         mFirestore1 = FirebaseFirestore.getInstance();
-        mFirestore1.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document("Internal 1").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        mFirestore3 = FirebaseFirestore.getInstance();
+        mFirestore4 = FirebaseFirestore.getInstance();
+        currentAverage = findViewById(R.id.currentAverage);
+        calculateAverage = findViewById(R.id.calculateAverage);
+        calculateAverage.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
+            public void onClick(View v) {
+                mFirestore1.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document("Internal 1").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().exists()) {
+                                if (task.getResult().getString("marksObtained").equals("AB")) {
+                                    internal1 = 0;
+                                } else {
+                                    internal1 = Integer.valueOf(task.getResult().getString("marksObtained"));
+                                }
+                                mFirestore3.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document("Internal 2").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            if (task.getResult().exists()) {
+                                                if (task.getResult().getString("marksObtained").equals("AB")) {
+                                                    internal2 = 0;
+                                                } else {
+                                                    internal2 = Integer.valueOf(task.getResult().getString("marksObtained"));
+                                                }
+                                                mFirestore4.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document("Internal 3").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            if (task.getResult().exists()) {
+                                                                if (task.getResult().getString("marksObtained").equals("AB")) {
+                                                                    internal3 = 0;
+                                                                } else {
+                                                                    internal3 = Integer.valueOf(task.getResult().getString("marksObtained"));
+                                                                }
+                                                                if (internal1 >= internal2 && internal1 >= internal3) {
+                                                                    if (internal2 >= internal3) {
+                                                                        averageValue = (internal1 + internal2) / 2;
+                                                                        currentAverage.setText(String.valueOf(averageValue));
+                                                                    } else {
+                                                                        averageValue = (internal1 + internal3) / 2;
+                                                                        currentAverage.setText(String.valueOf(averageValue));
+                                                                    }
+                                                                } else if (internal2 >= internal1 && internal2 >= internal3) {
+                                                                    if (internal1 >= internal3) {
+                                                                        averageValue = (internal2 + internal1) / 2;
+                                                                        currentAverage.setText(String.valueOf(averageValue));
+                                                                    } else {
+                                                                        averageValue = (internal2 + internal3) / 2;
+                                                                        currentAverage.setText(String.valueOf(averageValue));
+                                                                    }
+                                                                } else if (internal3 >= internal1 && internal3 >= internal2) {
+                                                                    if (internal1 >= internal2) {
+                                                                        averageValue = (internal3 + internal1) / 2;
+                                                                        currentAverage.setText(String.valueOf(averageValue));
+                                                                    } else {
+                                                                        averageValue = (internal3 + internal2) / 2;
+                                                                        currentAverage.setText(String.valueOf(averageValue));
+                                                                    }
+                                                                }
+                                                                if (averageValue < 15) {
+                                                                    currentAverage.setTextColor(Color.rgb(244, 67, 54));
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
             }
         });
     }
