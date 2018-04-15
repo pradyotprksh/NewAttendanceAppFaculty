@@ -28,14 +28,17 @@ public class EachSubjectStudentMarks extends AppCompatActivity {
                 intent.putExtra("studentId", studentId);
                 intent.putExtra("semester", semester);
                 intent.putExtra("subjectCode", subjectCode);
-                intent.putExtra("type", "Internals");
                 startActivity(intent);
             }
         });
         externalMarks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(EachSubjectStudentMarks.this, EachSubjectStudentExternalMarks.class);
+                intent.putExtra("studentId", studentId);
+                intent.putExtra("semester", semester);
+                intent.putExtra("subjectCode", subjectCode);
+                startActivity(intent);
             }
         });
     }

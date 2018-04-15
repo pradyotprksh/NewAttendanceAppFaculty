@@ -63,7 +63,8 @@
         <activity android:name=".StudentDetailsProctor" />
         <activity android:name=".EachSubjectStudentDetails" />
         <activity android:name=".EachSubjectStudentMarks" />
-        <activity android:name=".EachSubjectStudentInternalMarks"></activity>
+        <activity android:name=".EachSubjectStudentInternalMarks" />
+        <activity android:name=".EachSubjectStudentExternalMarks"></activity>
     </application>
 
 </manifest>

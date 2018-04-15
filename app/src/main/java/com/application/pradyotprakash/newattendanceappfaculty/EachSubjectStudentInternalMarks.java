@@ -25,10 +25,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class EachSubjectStudentInternalMarks extends AppCompatActivity {
 
-    private String studentId, subjectCode, semester, type;
+    private String studentId, subjectCode, semester;
     private AutoCompleteTextView internalValues;
     private ImageView internalSpinner;
     private static final String[] branch = new String[]{"Internal 1", "Internal 2", "Internal 3"};
@@ -51,7 +52,6 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
         studentId = getIntent().getStringExtra("studentId");
         subjectCode = getIntent().getStringExtra("subjectCode");
         semester = getIntent().getStringExtra("semester");
-        type = getIntent().getStringExtra("type");
         marksObtainedValue = findViewById(R.id.marksObtainedValue);
         totalMarksValue = findViewById(R.id.totalMarksValue);
         internalValues = findViewById(R.id.internalsOption);
@@ -163,33 +163,37 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(internalSelectedValue) && !(TextUtils.isEmpty(marksObtainedValue.getText().toString())) && !(TextUtils.isEmpty(totalMarksValue.getText().toString()))) {
-                    if (marksObtainedValue.getText().toString().equals("ab") || marksObtainedValue.getText().toString().equals("AB")) {
+                    boolean abCheck = Pattern.matches("ab", marksObtainedValue.getText().toString());
+                    boolean checkAB = Pattern.matches("AB", marksObtainedValue.getText().toString());
+                    boolean intCheck = Pattern.matches("[0-9]+", marksObtainedValue.getText().toString());
+                    if (abCheck || checkAB) {
                         HashMap<String, Object> internalMarks = new HashMap<>();
                         internalMarks.put("marksObtained", marksObtainedValue.getText().toString().toUpperCase());
                         internalMarks.put("totalMarks", totalMarksValue.getText().toString());
-                        mFirestore2.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document(internalSelectedValue).set(internalMarks).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        mFirestore.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document(internalValues.getText().toString()).set(internalMarks).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(EachSubjectStudentInternalMarks.this, "Marks Entered For " + internalSelectedValue, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(EachSubjectStudentInternalMarks.this, "Marks Entered.", Toast.LENGTH_SHORT).show();
                                 marksObtainedValue.setText("");
                             }
                         });
-                    } else if (Integer.valueOf(marksObtainedValue.getText().toString()) > Integer.valueOf(totalMarksValue.getText().toString())) {
-                        Toast.makeText(EachSubjectStudentInternalMarks.this, "Marks Obtained is Greater than Total Marks.", Toast.LENGTH_SHORT).show();
+                    } else if (intCheck) {
+                        if (Integer.valueOf(marksObtainedValue.getText().toString()) < Integer.valueOf(totalMarksValue.getText().toString())) {
+                            HashMap<String, Object> internalMarks = new HashMap<>();
+                            internalMarks.put("marksObtained", marksObtainedValue.getText().toString());
+                            internalMarks.put("totalMarks", totalMarksValue.getText().toString());
+                            mFirestore.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document(internalValues.getText().toString()).set(internalMarks).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(EachSubjectStudentInternalMarks.this, "Marks Entered.", Toast.LENGTH_SHORT).show();
+                                    marksObtainedValue.setText("");
+                                }
+                            });
+                        } else {
+                            Toast.makeText(EachSubjectStudentInternalMarks.this, "Obtained Marks is Greater than Total Marks.", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        HashMap<String, Object> internalMarks = new HashMap<>();
-                        internalMarks.put("marksObtained", marksObtainedValue.getText().toString());
-                        internalMarks.put("totalMarks", totalMarksValue.getText().toString());
-                        mFirestore2.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document(internalSelectedValue).set(internalMarks).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(EachSubjectStudentInternalMarks.this, "Marks Entered For " + internalSelectedValue, Toast.LENGTH_SHORT).show();
-                                marksObtainedValue.setText("");
-                            }
-                        });
-                    }
-                    if (!marksObtainedValue.getText().toString().equals("ab") || !marksObtainedValue.getText().toString().equals("AB")) {
-                        Toast.makeText(EachSubjectStudentInternalMarks.this, "Use AB or ab for Absent.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EachSubjectStudentInternalMarks.this, "Give Correct Input.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(EachSubjectStudentInternalMarks.this, "Enter The Details.", Toast.LENGTH_SHORT).show();
