@@ -4,13 +4,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -21,23 +22,25 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectSemesterClassProctor extends AppCompatActivity {
+public class SelectSemesterClassSeeNotes extends AppCompatActivity {
 
     private android.support.v7.widget.Toolbar mToolbar;
     private RecyclerView mClassListView;
     private List<TimetableClasses> classesList;
-    private ProctorClassRecyclerAdapter classRecyclerAdapter;
+    private SeeNotesClassRecyclerAdapter classRecyclerAdapter;
     private AutoCompleteTextView semesterOption;
     private ImageView semesterSpinner;
     private Button getClass;
-    String branch;
+    private static String branch;
+    private static String semesterValue;
     private FirebaseFirestore adminGetClassFirestore;
     private static final String[] semester = new String[]{"Semester 1", "Semester 2", "Semester 3", "Semester 4", "Semester 5", "Semester 6", "Semester 7", "Semester 8"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_semester_class_proctor);
+        setContentView(R.layout.activity_select_semester_class_see_notes);
         mToolbar = findViewById(R.id.faculty_selectsemester_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Select Semester");
@@ -47,7 +50,7 @@ public class SelectSemesterClassProctor extends AppCompatActivity {
         semesterOption = findViewById(R.id.faculty_selectclass);
         semesterSpinner = findViewById(R.id.semester_spinner);
         getClass = findViewById(R.id.get_class);
-        ArrayAdapter<String> adapterSemester = new ArrayAdapter<>(SelectSemesterClassProctor.this, android.R.layout.simple_dropdown_item_1line, semester);
+        ArrayAdapter<String> adapterSemester = new ArrayAdapter<>(SelectSemesterClassSeeNotes.this, android.R.layout.simple_dropdown_item_1line, semester);
         semesterOption.setAdapter(adapterSemester);
         semesterSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,18 +61,28 @@ public class SelectSemesterClassProctor extends AppCompatActivity {
         adminGetClassFirestore = FirebaseFirestore.getInstance();
         mClassListView = findViewById(R.id.faculty_class_list);
         classesList = new ArrayList<>();
-        classRecyclerAdapter = new ProctorClassRecyclerAdapter(classesList, getApplicationContext());
+        classRecyclerAdapter = new SeeNotesClassRecyclerAdapter(classesList, getApplicationContext());
         mClassListView.setHasFixedSize(true);
         mClassListView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         mClassListView.setAdapter(classRecyclerAdapter);
-        getClass.setOnClickListener(new View.OnClickListener() {
+        semesterOption.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
                 classesList.clear();
                 classRecyclerAdapter.notifyDataSetChanged();
-                String semester = semesterOption.getText().toString();
-                if (!TextUtils.isEmpty(semester)) {
-                    adminGetClassFirestore.collection("Class").document(branch).collection(semester).orderBy("classValue").addSnapshotListener(SelectSemesterClassProctor.this, new EventListener<QuerySnapshot>() {
+                semesterValue = semesterOption.getText().toString();
+                if (!TextUtils.isEmpty(semesterValue)) {
+                    adminGetClassFirestore.collection("Class").document(branch).collection(semesterValue).orderBy("classValue").addSnapshotListener(SelectSemesterClassSeeNotes.this, new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                             for (DocumentChange documentChange : documentSnapshots.getDocumentChanges()) {
@@ -81,11 +94,17 @@ public class SelectSemesterClassProctor extends AppCompatActivity {
                             }
                         }
                     });
-                } else {
-                    Toast.makeText(SelectSemesterClassProctor.this, "Select Semester", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
-}
 
+    public static String getSemesterValue() {
+        return semesterValue;
+    }
+
+    public static String getBranch() {
+        return branch;
+    }
+
+}

@@ -64,7 +64,11 @@
         <activity android:name=".EachSubjectStudentDetails" />
         <activity android:name=".EachSubjectStudentMarks" />
         <activity android:name=".EachSubjectStudentInternalMarks" />
-        <activity android:name=".EachSubjectStudentExternalMarks"></activity>
+        <activity android:name=".EachSubjectStudentExternalMarks" />
+        <activity android:name=".UploadNotes" />
+        <activity android:name=".SelectSemesterClassNotes" />
+        <activity android:name=".SelectSemesterClassSeeNotes" />
+        <activity android:name=".FacultySeeNotes"></activity>
     </application>
 
 </manifest>
