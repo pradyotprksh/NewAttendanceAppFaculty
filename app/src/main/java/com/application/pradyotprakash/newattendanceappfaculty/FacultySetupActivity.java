@@ -197,8 +197,8 @@ public class FacultySetupActivity extends AppCompatActivity {
                                     android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) &&
                             (ContextCompat.
                                     checkSelfPermission(FacultySetupActivity.this,
-                                            android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-                        ActivityCompat.requestPermissions(FacultySetupActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                        ActivityCompat.requestPermissions(FacultySetupActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                         ActivityCompat.requestPermissions(FacultySetupActivity.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
                     } else {
                         cropImage();

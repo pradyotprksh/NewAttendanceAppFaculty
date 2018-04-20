@@ -91,7 +91,7 @@ public class UploadNotes extends AppCompatActivity {
                         if (TextUtils.isEmpty(noteDescription.getText().toString())) {
                             noteDescription.setText("Notes for " + semesterValue + " of class " + classValue);
                         }
-                        StorageReference file_path = mStorageReference.child("student_notes").child(noteName.getText().toString() + ".pdf");
+                        StorageReference file_path = mStorageReference.child("student_notes").child(noteName.getText().toString());
                         file_path.putFile(fileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -158,9 +158,9 @@ public class UploadNotes extends AppCompatActivity {
                             android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) &&
                     (ContextCompat.
                             checkSelfPermission(UploadNotes.this,
-                                    android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
                 ActivityCompat.requestPermissions(UploadNotes.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                ActivityCompat.requestPermissions(UploadNotes.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                ActivityCompat.requestPermissions(UploadNotes.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             } else {
                 openFilePicker();
             }
@@ -181,7 +181,6 @@ public class UploadNotes extends AppCompatActivity {
         switch (requestCode) {
             case 9002:
                 if (resultCode == RESULT_OK) {
-                    // Get the Uri of the selected file
                     fileUri = data.getData();
                     String uriString = fileUri.toString();
                     File myFile = new File(uriString);

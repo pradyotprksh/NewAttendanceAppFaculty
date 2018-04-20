@@ -33,8 +33,8 @@ public class SeeNotesClassRecyclerAdapter extends RecyclerView.Adapter<SeeNotesC
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                semesterValue = SelectSemesterClassNotes.getSemesterValue();
-                branch = SelectSemesterClassNotes.getBranch();
+                semesterValue = SelectSemesterClassSeeNotes.getSemesterValue();
+                branch = SelectSemesterClassSeeNotes.getBranch();
                 String classValue = classList.get(position).getClassValue();
                 Intent intent = new Intent(context, FacultySeeNotes.class);
                 intent.putExtra("branch", branch);
