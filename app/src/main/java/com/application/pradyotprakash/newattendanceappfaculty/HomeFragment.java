@@ -1,7 +1,9 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,11 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
@@ -25,6 +29,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 /**
@@ -40,6 +46,14 @@ public class HomeFragment extends Fragment {
     private TodayTimetableRecyclerAdapter subjectRecyclerAdapter;
     private FirebaseFirestore mFirestore;
     private TextView todayDays;
+    private List<NewNotification> newNotificationList;
+    private TextView message, from, on;
+    private CircleImageView mImage;
+    private TextView message1, from1, on1;
+    private CircleImageView mImage1;
+    private ConstraintLayout firstNotification, secondNotification;
+    private FirebaseFirestore mFirestore5, mFirestore6;
+    private int position = 0;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -75,6 +89,128 @@ public class HomeFragment extends Fragment {
                         subjectRecyclerAdapter.notifyDataSetChanged();
                     }
                 }
+            }
+        });
+        message = view.findViewById(R.id.message_value);
+        from = view.findViewById(R.id.sender_name);
+        on = view.findViewById(R.id.message_on);
+        mImage = view.findViewById(R.id.sender_list_image);
+        message1 = view.findViewById(R.id.message_value1);
+        from1 = view.findViewById(R.id.sender_name1);
+        on1 = view.findViewById(R.id.message_on1);
+        mImage1 = view.findViewById(R.id.sender_list_image1);
+        mFirestore5 = FirebaseFirestore.getInstance();
+        newNotificationList = new ArrayList<>();
+        message.setVisibility(View.INVISIBLE);
+        from.setVisibility(View.INVISIBLE);
+        on.setVisibility(View.INVISIBLE);
+        mImage.setVisibility(View.INVISIBLE);
+        message1.setVisibility(View.INVISIBLE);
+        from1.setVisibility(View.INVISIBLE);
+        on1.setVisibility(View.INVISIBLE);
+        mImage1.setVisibility(View.INVISIBLE);
+        firstNotification = view.findViewById(R.id.firstNotification);
+        secondNotification = view.findViewById(R.id.secondNotification);
+        mFirestore5.collection("Faculty").document(user_id).collection("Notifications").orderBy("on", Query.Direction.DESCENDING).addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
+                    if (doc.getType() == DocumentChange.Type.ADDED) {
+                        NewNotification notification = doc.getDocument().toObject(NewNotification.class);
+                        newNotificationList.add(notification);
+                    }
+                }
+                for (position = 0; position < 2; position++) {
+                    if (position == 0) {
+                        message.setVisibility(View.VISIBLE);
+                        from.setVisibility(View.VISIBLE);
+                        on.setVisibility(View.VISIBLE);
+                        mImage.setVisibility(View.VISIBLE);
+                        String messageValue = newNotificationList.get(position).getMessage();
+                        if (messageValue.length() >= 15) {
+                            messageValue = messageValue.substring(0, Math.min(message.length(), 10));
+                            messageValue = messageValue + "...";
+                            message.setText(messageValue);
+                        } else {
+                            message.setText(newNotificationList.get(position).getMessage());
+                        }
+                        from.setText(newNotificationList.get(position).getSenderName());
+                        on.setText(newNotificationList.get(position).getOn());
+                        CircleImageView mImageView = mImage;
+                        Glide.with(getContext()).load(newNotificationList.get(position).getSenderImage()).into(mImageView);
+                    }
+                    if (position == 1) {
+                        message1.setVisibility(View.VISIBLE);
+                        from1.setVisibility(View.VISIBLE);
+                        on1.setVisibility(View.VISIBLE);
+                        mImage1.setVisibility(View.VISIBLE);
+                        String message = newNotificationList.get(position).getMessage();
+                        if (message.length() >= 15) {
+                            message = message.substring(0, Math.min(message.length(), 10));
+                            message = message + "...";
+                            message1.setText(message);
+                        } else {
+                            message1.setText(newNotificationList.get(position).getMessage());
+                        }
+                        from1.setText(newNotificationList.get(position).getSenderName());
+                        on1.setText(newNotificationList.get(position).getOn());
+                        CircleImageView mImageView1 = mImage1;
+                        Glide.with(getContext()).load(newNotificationList.get(position).getSenderImage()).into(mImageView1);
+                    }
+                }
+            }
+        });
+        mFirestore6 = FirebaseFirestore.getInstance();
+        firstNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFirestore6.collection("Faculty").document(user_id).collection("Notifications").orderBy("on", Query.Direction.DESCENDING).addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                        for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
+                                NewNotification notification = doc.getDocument().toObject(NewNotification.class);
+                                newNotificationList.add(notification);
+                            }
+                        }
+                        for (position = 0; position < 2; position++) {
+                            if (position == 0) {
+                                Intent notificationIndent = new Intent(getContext(), NotificationActivity.class);
+                                notificationIndent.putExtra("message", newNotificationList.get(position).getMessage());
+                                notificationIndent.putExtra("from_user_id", newNotificationList.get(position).getFrom());
+                                notificationIndent.putExtra("from_designation", newNotificationList.get(position).getDesignation());
+                                notificationIndent.putExtra("message_on", newNotificationList.get(position).getOn());
+                                startActivity(notificationIndent);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        secondNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFirestore6.collection("Faculty").document(user_id).collection("Notifications").orderBy("on", Query.Direction.DESCENDING).addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                        for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
+                                NewNotification notification = doc.getDocument().toObject(NewNotification.class);
+                                newNotificationList.add(notification);
+                            }
+                        }
+                        for (position = 0; position < 2; position++) {
+                            if (position == 1) {
+                                Intent notificationIndent = new Intent(getContext(), NotificationActivity.class);
+                                notificationIndent.putExtra("message", newNotificationList.get(position).getMessage());
+                                notificationIndent.putExtra("from_user_id", newNotificationList.get(position).getFrom());
+                                notificationIndent.putExtra("from_designation", newNotificationList.get(position).getDesignation());
+                                notificationIndent.putExtra("message_on", newNotificationList.get(position).getOn());
+                                startActivity(notificationIndent);
+                            }
+                        }
+                    }
+                });
             }
         });
         return view;

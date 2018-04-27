@@ -22,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
  */
 public class NotesFragment extends Fragment {
 
-    private Button uploadNotes, seeNotes;
+    private Button uploadNotes, seeNotes, uploadEvents, seeEvents;
     private FirebaseAuth mAuth;
     private static String user_id;
     private FirebaseFirestore mFirestore;
@@ -33,7 +33,7 @@ public class NotesFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_notes, container, false);
@@ -76,6 +76,24 @@ public class NotesFragment extends Fragment {
                         }
                     }
                 });
+            }
+        });
+        uploadEvents = view.findViewById(R.id.uploadEvents);
+        uploadEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), UploadEvents.class);
+                intent.putExtra("facultyId", user_id);
+                startActivity(intent);
+            }
+        });
+        seeEvents = view.findViewById(R.id.seeEvents);
+        seeEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), SeeEvents.class);
+                intent.putExtra("facultyId", user_id);
+                startActivity(intent);
             }
         });
         return view;

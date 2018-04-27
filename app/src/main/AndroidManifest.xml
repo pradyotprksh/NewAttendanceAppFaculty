@@ -69,7 +69,10 @@
         <activity android:name=".SelectSemesterClassNotes" />
         <activity android:name=".SelectSemesterClassSeeNotes" />
         <activity android:name=".FacultySeeNotes" />
-        <activity android:name=".NotificationActivity"></activity>
+        <activity android:name=".NotificationActivity" />
+        <activity android:name=".UploadEvents" />
+        <activity android:name=".SeeEvents" />
+        <activity android:name=".EachEventInformation"></activity>
     </application>
 
 </manifest>
