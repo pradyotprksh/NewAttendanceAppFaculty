@@ -2,17 +2,44 @@ package com.application.pradyotprakash.newattendanceappfaculty;
 
 public class EventList extends EventId{
 
-    private String title, description, uploadedBy, imageLink, uploadedOn;
+    private String title, description, uploadedBy, imageLink, uploadedOn, year, month, day;
 
     public EventList() {
     }
 
-    public EventList(String title, String description, String uploadedBy, String imageLink, String uploadedOn) {
+    public EventList(String title, String description, String uploadedBy, String imageLink, String uploadedOn, String year, String month, String day) {
         this.title = title;
         this.description = description;
         this.uploadedBy = uploadedBy;
         this.imageLink = imageLink;
         this.uploadedOn = uploadedOn;
+        this.year = year;
+        this.month = month;
+        this.day = day;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
     }
 
     public String getTitle() {

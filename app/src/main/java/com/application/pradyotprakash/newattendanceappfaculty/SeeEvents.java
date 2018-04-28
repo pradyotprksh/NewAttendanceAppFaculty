@@ -41,7 +41,6 @@ public class SeeEvents extends AppCompatActivity {
         noteList.setHasFixedSize(true);
         noteList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         noteList.setAdapter(noteRecyclerAdapter);
-        notesList.clear();
         mFirestore.collection("Events").orderBy("uploadedOn").addSnapshotListener(SeeEvents.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {

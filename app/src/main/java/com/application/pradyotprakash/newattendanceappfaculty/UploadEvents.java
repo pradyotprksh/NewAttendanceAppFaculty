@@ -50,6 +50,7 @@ public class UploadEvents extends AppCompatActivity {
     private StorageReference mfacultyStorageReference;
     private FirebaseFirestore mFirestore;
     private ProgressDialog progress;
+    private int pickyear, pickmonth, pickday;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,9 @@ public class UploadEvents extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 month = month + 1;
+                pickyear = year;
+                pickmonth = month;
+                pickday = dayOfMonth;
                 pickDate.setText(dayOfMonth + " / " + month + " / " + year);
                 Toast.makeText(UploadEvents.this, "Long Press To Clear.", Toast.LENGTH_SHORT).show();
             }
@@ -197,6 +201,9 @@ public class UploadEvents extends AppCompatActivity {
         facultyMap.put("uploadedBy", facultyId);
         facultyMap.put("imageLink", download_uri.toString());
         facultyMap.put("uploadedOn", uploadedOn);
+        facultyMap.put("year", String.valueOf(pickyear));
+        facultyMap.put("month", String.valueOf(pickmonth));
+        facultyMap.put("day", String.valueOf(pickday));
         mFirestore.collection("Events").document().set(facultyMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -205,6 +212,8 @@ public class UploadEvents extends AppCompatActivity {
                     eventTitle.setText("");
                     eventDescription.setText("");
                     eventImage.setImageResource(R.drawable.no_event_image);
+                    pickDate.setText("Pick Event Date");
+                    pickTime.setText("Pick Event Timing");
                     progress.dismiss();
                 } else {
                     String image_error = task.getException().getMessage();
@@ -213,7 +222,6 @@ public class UploadEvents extends AppCompatActivity {
                 }
             }
         });
-        progress.dismiss();
     }
 
     private TimePickerDialog.OnTimeSetListener timeFromPickerListener = new TimePickerDialog.OnTimeSetListener() {

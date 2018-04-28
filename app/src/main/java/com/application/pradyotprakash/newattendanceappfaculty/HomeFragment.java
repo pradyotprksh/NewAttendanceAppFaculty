@@ -2,6 +2,7 @@ package com.application.pradyotprakash.newattendanceappfaculty;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -51,8 +52,10 @@ public class HomeFragment extends Fragment {
     private CircleImageView mImage;
     private TextView message1, from1, on1;
     private CircleImageView mImage1;
-    private ConstraintLayout firstNotification, secondNotification;
-    private FirebaseFirestore mFirestore5, mFirestore6;
+    private ConstraintLayout firstNotification, secondNotification, newEvent;
+    private TextView eventTitle, eventDescription, eventUploadedOn;
+    private FirebaseFirestore mFirestore5, mFirestore6, mFirestore7;
+    private List<EventList> notesList;
     private int position = 0;
 
     public HomeFragment() {
@@ -207,6 +210,57 @@ public class HomeFragment extends Fragment {
                                 notificationIndent.putExtra("from_designation", newNotificationList.get(position).getDesignation());
                                 notificationIndent.putExtra("message_on", newNotificationList.get(position).getOn());
                                 startActivity(notificationIndent);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        newEvent = view.findViewById(R.id.newEvent);
+        eventTitle = view.findViewById(R.id.eventTitle);
+        eventDescription = view.findViewById(R.id.uploadedBy);
+        eventUploadedOn = view.findViewById(R.id.eventUploadedOn);
+        mFirestore7 = FirebaseFirestore.getInstance();
+        notesList = new ArrayList<>();
+        mFirestore7.collection("Events").orderBy("uploadedOn").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                for (DocumentChange documentChange : documentSnapshots.getDocumentChanges()) {
+                    if (documentChange.getType() == DocumentChange.Type.ADDED) {
+                        String note_id = documentChange.getDocument().getId();
+                        EventList noteList1 = documentChange.getDocument().toObject(EventList.class).withId(note_id);
+                        notesList.add(noteList1);
+                    }
+                }
+                for (position = 0; position <= notesList.size(); position++) {
+                    if (position == 0) {
+                        if (notesList.get(position).getUploadedBy().equals(user_id)) {
+                            eventTitle.setTextColor(Color.rgb(244, 67, 54));
+                        }
+                        eventTitle.setText(notesList.get(position).getTitle());
+                        eventDescription.setText(notesList.get(position).getDescription());
+                        eventUploadedOn.setText(notesList.get(position).getUploadedOn());
+                    }
+                }
+            }
+        });
+        newEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFirestore7.collection("Events").orderBy("uploadedOn").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                        for (DocumentChange documentChange : documentSnapshots.getDocumentChanges()) {
+                            if (documentChange.getType() == DocumentChange.Type.ADDED) {
+                                String note_id = documentChange.getDocument().getId();
+                                EventList noteList1 = documentChange.getDocument().toObject(EventList.class).withId(note_id);
+                                notesList.add(noteList1);
+                            }
+                        }
+                        for (position = 0; position <= notesList.size(); position++) {
+                            if (position == 0) {
+                                Intent intent = new Intent(getContext(), SeeEvents.class);
+                                startActivity(intent);
                             }
                         }
                     }
