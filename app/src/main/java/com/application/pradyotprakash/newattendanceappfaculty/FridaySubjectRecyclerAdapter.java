@@ -1,7 +1,6 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,19 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by pradyot on 14/03/18.
@@ -94,7 +88,7 @@ public class FridaySubjectRecyclerAdapter extends RecyclerView.Adapter<FridaySub
             mView = itemView;
             subject = mView.findViewById(R.id.subject_value);
             time = mView.findViewById(R.id.time_value);
-            takenByValue = mView.findViewById(R.id.taken_by_value);
+            takenByValue = mView.findViewById(R.id.class_value);
             subjectCode = mView.findViewById(R.id.subject_code);
         }
     }

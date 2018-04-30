@@ -72,7 +72,9 @@
         <activity android:name=".NotificationActivity" />
         <activity android:name=".UploadEvents" />
         <activity android:name=".SeeEvents" />
-        <activity android:name=".EachEventInformation"></activity>
+        <activity android:name=".EachEventInformation" />
+        <activity android:name=".ClassTeacherClassDetails" />
+        <activity android:name=".OnlyFacultySubjectDetails"></activity>
     </application>
 
 </manifest>

@@ -28,7 +28,7 @@ public class DetailsFragment extends Fragment {
     private String user_id, branch;
     private FirebaseAuth mAuth;
     private String classTeacher = "false", proctor = "false", classTeacherOfValue;
-    private Button subjectBtn, proctorBtn;
+    private Button subjectBtn, proctorBtn, facultySubjectsBtn;
     private TextView classTeacherOf;
 
     public DetailsFragment() {
@@ -37,7 +37,7 @@ public class DetailsFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_details, container, false);
@@ -65,6 +65,19 @@ public class DetailsFragment extends Fragment {
                 }
             }
         });
+        classTeacherOf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!classTeacherOf.getText().equals("You Are Not A Class Teacher")) {
+                    Intent intent = new Intent(getActivity(), ClassTeacherClassDetails.class);
+                    intent.putExtra("classValue", classTeacherOfValue);
+                    intent.putExtra("facultyId", user_id);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getContext(), "You are not a class teacher.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         subjectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +91,14 @@ public class DetailsFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProctorStudentList.class);
                 intent.putExtra("branch", branch);
+                startActivity(intent);
+            }
+        });
+        facultySubjectsBtn = view.findViewById(R.id.subjectTimetable);
+        facultySubjectsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), OnlyFacultySubjectDetails.class);
                 startActivity(intent);
             }
         });

@@ -54,6 +54,7 @@ public class FacultySetupActivity extends AppCompatActivity {
     private boolean isChanged = false;
     private ImageView branchSpinner;
     private CheckBox classTeacher, proctor;
+    String isClassTeacherChecked;
     private static final String[] branch = new String[]{"Bio Technology Engineering", "Civil Engineering", "Computer Science Engineering", "Electrical & Electronics Engineering", "Electronics & Comm. Engineering", "Information Science & Engineering", "Mechanical Engineering"};
 
     @Override
@@ -101,8 +102,7 @@ public class FacultySetupActivity extends AppCompatActivity {
                         String branch = task.getResult().getString("branch");
                         String id = task.getResult().getString("id");
                         String image = task.getResult().getString("image");
-                        String isClassTeacherChecked = task.getResult().getString("classTeacherValue");
-                        String isSubjectTeacherChecked = task.getResult().getString("subjectTeacherValue");
+                        isClassTeacherChecked = task.getResult().getString("classTeacherValue");
                         String isProctorChecked = task.getResult().getString("proctorValue");
                         try {
                             classTeacherOf = task.getResult().getString("classTeacherOf");
@@ -225,6 +225,7 @@ public class FacultySetupActivity extends AppCompatActivity {
         facultyMap.put("image", download_uri.toString());
         facultyMap.put("token_id", token_id);
         facultyMap.put("classTeacherOf", classTeacherOf);
+        facultyMap.put("classTeacherValue", isClassTeacherChecked);
         facultySetupFirestore.collection("Faculty").document(user_id).set(facultyMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

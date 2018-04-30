@@ -19,7 +19,7 @@
             android:layout_marginTop="24dp"
             android:backgroundTint="@color/colorAccent"
             android:padding="15dp"
-            android:text="Subject Details"
+            android:text="See Timetable"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="18sp"
@@ -29,12 +29,30 @@
             app:layout_constraintTop_toBottomOf="@+id/classTeacherOf" />
 
         <Button
+            android:id="@+id/subjectTimetable"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/colorAccent"
+            android:padding="15dp"
+            android:text="See Yours Timetable"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subjectTeacher" />
+
+        <Button
             android:id="@+id/proctor"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="8dp"
             android:backgroundTint="@color/colorAccent"
             android:padding="15dp"
             android:text="Proctor Details"
@@ -44,7 +62,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subjectTeacher" />
+            app:layout_constraintTop_toBottomOf="@+id/subjectTimetable" />
 
         <TextView
             android:id="@+id/classTeacherOf"
