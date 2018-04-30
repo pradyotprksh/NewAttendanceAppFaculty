@@ -36,4 +36,5 @@
     <string name="loading_class">Loading Class...</string>
     <string name="loading_semester">Loading Semester...</string>
     <string name="send_message_each_student">Send Message</string>
+    <string name="default_notification_channel_id">Faculty_CH_01</string>
 </resources>

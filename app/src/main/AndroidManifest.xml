@@ -69,12 +69,32 @@
         <activity android:name=".SelectSemesterClassNotes" />
         <activity android:name=".SelectSemesterClassSeeNotes" />
         <activity android:name=".FacultySeeNotes" />
-        <activity android:name=".NotificationActivity" />
+        <activity
+            android:name=".NotificationActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.application.pradyotprakash.newattendanceappfaculty.pushnotification.TARGET" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".UploadEvents" />
         <activity android:name=".SeeEvents" />
         <activity android:name=".EachEventInformation" />
         <activity android:name=".ClassTeacherClassDetails" />
         <activity android:name=".OnlyFacultySubjectDetails"></activity>
+        <service android:name=".FirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
     </application>
 
 </manifest>
