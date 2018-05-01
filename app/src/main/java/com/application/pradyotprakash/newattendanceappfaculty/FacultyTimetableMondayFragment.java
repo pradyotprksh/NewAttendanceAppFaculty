@@ -29,8 +29,8 @@ public class FacultyTimetableMondayFragment extends Fragment {
     private String user_id;
     private FirebaseAuth mAuth;
     private RecyclerView mSubjectListView;
-    private List<MondaySubjects> subjectList;
-    private MondaySubjectRecyclerAdapter subjectRecyclerAdapter;
+    private List<FacultyMondaySubjects> subjectList;
+    private FacultyMondaySubjectRecyclerAdapter subjectRecyclerAdapter;
 
     public FacultyTimetableMondayFragment() {
         // Required empty public constructor
@@ -46,7 +46,7 @@ public class FacultyTimetableMondayFragment extends Fragment {
         user_id = mAuth.getCurrentUser().getUid();
         mSubjectListView = view.findViewById(R.id.monday_subject);
         subjectList = new ArrayList<>();
-        subjectRecyclerAdapter = new MondaySubjectRecyclerAdapter(subjectList, getContext());
+        subjectRecyclerAdapter = new FacultyMondaySubjectRecyclerAdapter(subjectList, getContext());
         mSubjectListView.setHasFixedSize(true);
         mSubjectListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mSubjectListView.setAdapter(subjectRecyclerAdapter);
@@ -58,7 +58,7 @@ public class FacultyTimetableMondayFragment extends Fragment {
                 for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
                     if (doc.getType() == DocumentChange.Type.ADDED) {
                         String subject_id = doc.getDocument().getId();
-                        MondaySubjects subjects = doc.getDocument().toObject(MondaySubjects.class).withId(subject_id);
+                        FacultyMondaySubjects subjects = doc.getDocument().toObject(FacultyMondaySubjects.class).withId(subject_id);
                         subjectList.add(subjects);
                         subjectRecyclerAdapter.notifyDataSetChanged();
                     }

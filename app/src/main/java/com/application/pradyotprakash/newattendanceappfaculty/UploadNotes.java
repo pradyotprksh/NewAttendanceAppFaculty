@@ -43,7 +43,7 @@ public class UploadNotes extends AppCompatActivity {
     private static final int REQUEST_READ_PERMISSION = 9003;
     private StorageReference mStorageReference;
     private Uri fileUri;
-    private FirebaseFirestore mFirestore;
+    private FirebaseFirestore mFirestore, mFirestore1;
     private String fileUrl;
     private Uri noteMainUri = null;
     private FirebaseAuth mAuth;
@@ -75,6 +75,7 @@ public class UploadNotes extends AppCompatActivity {
             }
         });
         mFirestore = FirebaseFirestore.getInstance();
+        mFirestore1 = FirebaseFirestore.getInstance();
         uploadFile = findViewById(R.id.uploadFile);
         mStorageReference = FirebaseStorage.getInstance().getReference();
         uploadFile.setOnClickListener(new View.OnClickListener() {
@@ -105,26 +106,26 @@ public class UploadNotes extends AppCompatActivity {
                             }
                         });
                     } else {
-                        Toast.makeText(UploadNotes.this,"Enter The Title For The Note", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UploadNotes.this, "Enter The Title For The Note", Toast.LENGTH_SHORT).show();
                         progress.dismiss();
                     }
                 } else {
-                    Toast.makeText(UploadNotes.this,"Select A File.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UploadNotes.this, "Select A File.", Toast.LENGTH_SHORT).show();
                     progress.dismiss();
                 }
             }
         });
     }
 
-    private void storeFireStore(Task<UploadTask.TaskSnapshot> task, String title, String description, final String name) {
-        Uri download_uri;
+    private void storeFireStore(Task<UploadTask.TaskSnapshot> task, final String title, final String description, final String name) {
+        final Uri download_uri;
         if (task != null) {
             download_uri = task.getResult().getDownloadUrl();
         } else {
             download_uri = noteMainUri;
         }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-YYYY hh:mm");
-        String date = simpleDateFormat.format(new Date());
+        final String date = simpleDateFormat.format(new Date());
         HashMap<String, String> noteMap = new HashMap<>();
         noteMap.put("name", name);
         noteMap.put("title", title);
@@ -137,11 +138,26 @@ public class UploadNotes extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(UploadNotes.this, name + " Has Been Uploaded.", Toast.LENGTH_LONG).show();
-                    noteTitle.setText("");
-                    noteDescription.setText("");
-                    noteName.setText("");
-                    progress.dismiss();
+                    HashMap<String, String> noteMapXerox = new HashMap<>();
+                    noteMapXerox.put("name", name);
+                    noteMapXerox.put("title", title);
+                    noteMapXerox.put("description", description);
+                    noteMapXerox.put("uploadedBy", user_id);
+                    noteMapXerox.put("branch", branch);
+                    noteMapXerox.put("noteLink", download_uri.toString());
+                    noteMapXerox.put("uploadedOn", date);
+                    noteMapXerox.put("classValue", classValue);
+                    noteMapXerox.put("downloaded", "false");
+                    mFirestore1.collection("Notes").document(name + title + date).set(noteMapXerox).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(UploadNotes.this, name + " Has Been Uploaded.", Toast.LENGTH_LONG).show();
+                            noteTitle.setText("");
+                            noteDescription.setText("");
+                            noteName.setText("");
+                            progress.dismiss();
+                        }
+                    });
                 } else {
                     String image_error = task.getException().getMessage();
                     Toast.makeText(UploadNotes.this, "Error: " + image_error, Toast.LENGTH_SHORT).show();
@@ -171,7 +187,7 @@ public class UploadNotes extends AppCompatActivity {
 
     private void openFilePicker() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("application/pdf");
+        intent.setType("*/*");
         startActivityForResult(intent, FILE_REQUEST);
     }
 

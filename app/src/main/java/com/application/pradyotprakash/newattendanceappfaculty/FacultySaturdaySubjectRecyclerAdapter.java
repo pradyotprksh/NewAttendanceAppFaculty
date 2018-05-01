@@ -9,26 +9,26 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class FacultyMondaySubjectRecyclerAdapter extends RecyclerView.Adapter<FacultyMondaySubjectRecyclerAdapter.ViewHolder> {
+public class FacultySaturdaySubjectRecyclerAdapter extends RecyclerView.Adapter<FacultySaturdaySubjectRecyclerAdapter.ViewHolder> {
 
     private List<FacultyMondaySubjects> subjectList;
     private Context context;
 
 
-    public FacultyMondaySubjectRecyclerAdapter(List<FacultyMondaySubjects> subjectList, Context context) {
+    public FacultySaturdaySubjectRecyclerAdapter(List<FacultyMondaySubjects> subjectList, Context context) {
         this.subjectList = subjectList;
         this.context = context;
     }
 
     @Override
-    public FacultyMondaySubjectRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FacultySaturdaySubjectRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.faculty_monday_subject_list, parent, false);
-        return new FacultyMondaySubjectRecyclerAdapter.ViewHolder(view);
+        return new FacultySaturdaySubjectRecyclerAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final FacultyMondaySubjectRecyclerAdapter.ViewHolder holder, final int position) {
-        if (subjectList.get(position).getWeekDay().equals("Monday")) {
+    public void onBindViewHolder(final FacultySaturdaySubjectRecyclerAdapter.ViewHolder holder, final int position) {
+        if (subjectList.get(position).getWeekDay().equals("Saturday")) {
             holder.timeValue.setText(subjectList.get(position).getFrom() + " : " + subjectList.get(position).getTo());
             holder.classValue.setText(subjectList.get(position).getClassValue());
             holder.subjectCode.setText(subjectList.get(position).getSubjectCode());
