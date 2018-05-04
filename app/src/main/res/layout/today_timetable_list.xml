@@ -18,7 +18,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/classValue"
+        android:id="@+id/currentClassValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/subjectName"
@@ -33,8 +33,8 @@
         android:id="@+id/dayValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/classValue"
-        android:layout_alignBottom="@+id/classValue"
+        android:layout_alignBaseline="@+id/currentClassValue"
+        android:layout_alignBottom="@+id/currentClassValue"
         android:layout_alignEnd="@+id/timing"
         android:padding="10dp"
         android:text="DayValue"

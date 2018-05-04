@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -111,7 +110,7 @@ public class TodayTimetableRecyclerAdapter extends RecyclerView.Adapter<TodayTim
             super(itemView);
             mView = itemView;
             subject = mView.findViewById(R.id.subjectName);
-            classValue = mView.findViewById(R.id.classValue);
+            classValue = mView.findViewById(R.id.currentClassValue);
             timing = mView.findViewById(R.id.timing);
             dayValue = mView.findViewById(R.id.dayValue);
         }

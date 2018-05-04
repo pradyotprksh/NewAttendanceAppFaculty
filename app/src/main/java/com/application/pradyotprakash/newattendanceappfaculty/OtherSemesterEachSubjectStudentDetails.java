@@ -14,9 +14,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -27,22 +29,25 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EachSubjectStudentDetails extends AppCompatActivity {
+public class OtherSemesterEachSubjectStudentDetails extends AppCompatActivity {
 
-    private static String subjectCode, student_id, semester, classValue, branch;
+    private String subjectCode, subjectTeacher;
+    private FirebaseAuth mAuth;
+    private String student_id, semester, classValue, branch;
     private TextView daysAttended, currentPercentage, takenBy;
     private FirebaseFirestore mFirestore, mFirestore1, mFirestore3;
     private RecyclerView studentStatus;
     private List<StudentsStatus> studentsList;
-    private ProctorStatusRecyclerAdapter studentRecyclerAdapter;
+    private StudentsStatusRecyclerAdapter studentRecyclerAdapter;
     private FirebaseFirestore mFirestore2, mFirestore4;
     private Button marksStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_each_subject_student_details);
-        subjectCode = getIntent().getStringExtra("subjectCode");
+        setContentView(R.layout.activity_other_semester_each_subject_student_details);
+        subjectCode = getIntent().getStringExtra("subjectId");
+        subjectTeacher = getIntent().getStringExtra("subjectTeacher");
         student_id = getIntent().getStringExtra("studentId");
         Toolbar mToolbar = findViewById(R.id.studentSubjectToolbar);
         setSupportActionBar(mToolbar);
@@ -57,7 +62,7 @@ public class EachSubjectStudentDetails extends AppCompatActivity {
         studentStatus = findViewById(R.id.student_status);
         takenBy = findViewById(R.id.takenBy);
         studentsList = new ArrayList<>();
-        studentRecyclerAdapter = new ProctorStatusRecyclerAdapter(getApplicationContext(), studentsList);
+        studentRecyclerAdapter = new StudentsStatusRecyclerAdapter(getApplicationContext(), studentsList);
         studentStatus.setHasFixedSize(true);
         studentStatus.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         studentStatus.setAdapter(studentRecyclerAdapter);
@@ -71,23 +76,13 @@ public class EachSubjectStudentDetails extends AppCompatActivity {
                         semester = task.getResult().getString("semester");
                         classValue = task.getResult().getString("className");
                         branch = task.getResult().getString("branch");
-                        mFirestore3.collection("Subject").document(branch).collection(semester).document(subjectCode).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        mFirestore4.collection("Faculty").document(subjectTeacher).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
                                     if (task.getResult().exists()) {
-                                        String facultyId = task.getResult().getString(classValue);
-                                        mFirestore4.collection("Faculty").document(facultyId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                if (task.isSuccessful()) {
-                                                    if (task.getResult().exists()) {
-                                                        String name = task.getResult().getString("name");
-                                                        takenBy.setText("Subject Teacher: " + name);
-                                                    }
-                                                }
-                                            }
-                                        });
+                                        String name = task.getResult().getString("name");
+                                        takenBy.setText("Subject Teacher: " + name);
                                     }
                                 }
                             }
@@ -112,7 +107,7 @@ public class EachSubjectStudentDetails extends AppCompatActivity {
                                         }
                                     }
                                     studentsList.clear();
-                                    mFirestore2.collection("Student").document(student_id).collection(semester).document("Attendance").collection(subjectCode).document("Absent").collection("Absent").orderBy("date").addSnapshotListener(EachSubjectStudentDetails.this, new EventListener<QuerySnapshot>() {
+                                    mFirestore2.collection("Student").document(student_id).collection(semester).document("Attendance").collection(subjectCode).document("Absent").collection("Absent").orderBy("date").addSnapshotListener(OtherSemesterEachSubjectStudentDetails.this, new EventListener<QuerySnapshot>() {
                                         @Override
                                         public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                                             for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
@@ -134,31 +129,19 @@ public class EachSubjectStudentDetails extends AppCompatActivity {
         });
         DividerItemDecoration horizontalDecoration = new DividerItemDecoration(studentStatus.getContext(),
                 DividerItemDecoration.VERTICAL);
-        Drawable horizontalDivider = ContextCompat.getDrawable(EachSubjectStudentDetails.this, R.drawable.horizontal_divider);
+        Drawable horizontalDivider = ContextCompat.getDrawable(OtherSemesterEachSubjectStudentDetails.this, R.drawable.horizontal_divider);
         horizontalDecoration.setDrawable(horizontalDivider);
         studentStatus.addItemDecoration(horizontalDecoration);
         marksStatus = findViewById(R.id.marksDetails);
         marksStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EachSubjectStudentDetails.this, EachSubjectStudentMarks.class);
+                Intent intent = new Intent(OtherSemesterEachSubjectStudentDetails.this, EachSubjectStudentMarks.class);
                 intent.putExtra("studentId", student_id);
                 intent.putExtra("semester", semester);
                 intent.putExtra("subjectCode", subjectCode);
                 startActivity(intent);
             }
         });
-    }
-
-    public static String getSubjectCode() {
-        return subjectCode;
-    }
-
-    public static String getStudent_id() {
-        return student_id;
-    }
-
-    public static String getSemester() {
-        return semester;
     }
 }

@@ -114,7 +114,7 @@ public class HomeFragment extends Fragment {
         mImage1.setVisibility(View.INVISIBLE);
         firstNotification = view.findViewById(R.id.firstNotification);
         secondNotification = view.findViewById(R.id.secondNotification);
-        mFirestore5.collection("Faculty").document(user_id).collection("Notifications").orderBy("on", Query.Direction.DESCENDING).addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+        mFirestore5.collection("Faculty").document(user_id).collection("Notifications").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                 for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {

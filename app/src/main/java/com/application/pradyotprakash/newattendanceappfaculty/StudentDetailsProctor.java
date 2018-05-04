@@ -1,5 +1,6 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +44,8 @@ public class StudentDetailsProctor extends AppCompatActivity {
     private RecyclerView mSubjectListView;
     private List<StudentSubjects> subjectList;
     private StudentSubjectRecyclerAdapter subjectRecyclerAdapter;
+    private Button sendMessage;
+    private Button otherSemesterDetails, checkValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +159,44 @@ public class StudentDetailsProctor extends AppCompatActivity {
         Drawable horizontalDivider = ContextCompat.getDrawable(StudentDetailsProctor.this, R.drawable.horizontal_divider);
         horizontalDecoration.setDrawable(horizontalDivider);
         mSubjectListView.addItemDecoration(horizontalDecoration);
+        sendMessage = findViewById(R.id.send_message);
+        sendMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StudentDetailsProctor.this, AdminEachStudentNotification.class);
+                intent.putExtra("student_id", studentId);
+                intent.putExtra("name", name);
+                startActivity(intent);
+            }
+        });
+        otherSemesterDetails = findViewById(R.id.other_semester_details);
+        otherSemesterDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (semester.equals("Semester 1")) {
+//                    Toast.makeText(getContext(), "You are in the first semester.", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Intent intent = new Intent(getContext(), OtherSemesterDetails.class);
+//                    intent.putExtra("currentSemester", semester);
+//                    startActivity(intent);
+//                }
+                Intent intent = new Intent(StudentDetailsProctor.this, OtherSemesterDetails.class);
+                intent.putExtra("studentId", studentId);
+                intent.putExtra("currentSemester", semester);
+                intent.putExtra("branch", branch);
+                startActivity(intent);
+            }
+        });
+        checkValues = findViewById(R.id.changeValues);
+        checkValues.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StudentDetailsProctor.this, ChangeStudentValuesProctor.class);
+                intent.putExtra("studentId", studentId);
+                intent.putExtra("semester", semester);
+                startActivity(intent);
+            }
+        });
     }
 
     public static String getStudentId() {

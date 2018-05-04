@@ -1,7 +1,7 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -18,37 +18,32 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-/**
- * Created by pradyot on 16/03/18.
- */
-
-public class StudentsStatusRecyclerAdapter extends RecyclerView.Adapter<StudentsStatusRecyclerAdapter.ViewHolder> {
+public class ProctorStatusRecyclerAdapter extends RecyclerView.Adapter<ProctorStatusRecyclerAdapter.ViewHolder> {
 
     private List<StudentsStatus> statusList;
     private Context context;
     private FirebaseFirestore mFirestore, mFirestore1, mFirestore2;
     private String currentValue;
+    private ProgressDialog progress;
 
-    public StudentsStatusRecyclerAdapter(Context context, List<StudentsStatus> statusList) {
+    public ProctorStatusRecyclerAdapter(Context context, List<StudentsStatus> statusList) {
         this.statusList = statusList;
         this.context = context;
     }
 
     @Override
-    public StudentsStatusRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ProctorStatusRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.student_attendance_status_list, parent, false);
-        return new ViewHolder(view);
+        return new ProctorStatusRecyclerAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final StudentsStatusRecyclerAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ProctorStatusRecyclerAdapter.ViewHolder holder, final int position) {
         final String statusId = statusList.get(position).statusId;
-        final String studentId = StudentStatus.getStudentid();
-        final String className = StudentStatus.getClassName();
-        final String subject = StudentStatus.getSubject();
-        final String semester = StudentStatus.getSemester();
+        final String studentId = EachSubjectStudentDetails.getStudent_id();
+        final String subject = EachSubjectStudentDetails.getSubjectCode();
+        final String semester = EachSubjectStudentDetails.getSemester();
         String weekDay = statusList.get(position).getWeekDay();
         String date = statusList.get(position).getDate();
         String day = date + " " + weekDay;

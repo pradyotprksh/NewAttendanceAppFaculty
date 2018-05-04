@@ -82,7 +82,9 @@
         <activity android:name=".SeeEvents" />
         <activity android:name=".EachEventInformation" />
         <activity android:name=".ClassTeacherClassDetails" />
-        <activity android:name=".OnlyFacultySubjectDetails"></activity>
+        <activity android:name=".AdminEachStudentNotification" />
+        <activity android:name=".OnlyFacultySubjectDetails" />
+
         <service android:name=".FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -92,9 +94,15 @@
             android:name=".MyService"
             android:enabled="true"
             android:exported="true" />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
+
+        <activity android:name=".FacultyEachSubjectStudentMarks" />
+        <activity android:name=".ChangeStudentValuesProctor" />
+        <activity android:name=".OtherSemesterDetails" />
+        <activity android:name=".OtherSemesterEachSubjectStudentDetails"></activity>
     </application>
 
 </manifest>

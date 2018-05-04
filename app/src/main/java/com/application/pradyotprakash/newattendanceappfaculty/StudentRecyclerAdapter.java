@@ -36,7 +36,7 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
 
     private List<Students> studentsList;
     private Context context;
-    private FirebaseFirestore mFirestore, mFirestore1, mFirestore2, mFirestore3;
+    private FirebaseFirestore mFirestore, mFirestore1, mFirestore2, mFirestore3, mFirestore4;
     final String subjectCode = StudentAttendanceList.getSubjectCode();
     final String classvalue = StudentAttendanceList.getClassValue();
     private double totalDays, studentDays, percentage;
@@ -68,6 +68,7 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
         mFirestore1 = FirebaseFirestore.getInstance();
         mFirestore2 = FirebaseFirestore.getInstance();
         mFirestore3 = FirebaseFirestore.getInstance();
+        mFirestore4 = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         user_id = mAuth.getCurrentUser().getUid();
         mFirestore2 = FirebaseFirestore.getInstance();
@@ -110,9 +111,17 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
                                     mFirestore.collection("Student").document(student_id).collection(studentsList.get(position).getSemester()).document("Attendance").collection(subjectCode).document("Details").set(presentMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Toast.makeText(context, "Present", Toast.LENGTH_SHORT).show();
-                                            holder.absent.setEnabled(false);
-                                            holder.present.setEnabled(false);
+                                            HashMap<String, Object> subjectDetails = new HashMap<>();
+                                            subjectDetails.put("subjectTeacher", user_id);
+                                            subjectDetails.put("subjectCode", subjectCode);
+                                            mFirestore4.collection("Student").document(student_id).collection(studentsList.get(position).getSemester()).document(subjectCode).set(subjectDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    Toast.makeText(context, "Present", Toast.LENGTH_SHORT).show();
+                                                    holder.absent.setEnabled(false);
+                                                    holder.present.setEnabled(false);
+                                                }
+                                            });
                                         }
                                     });
                                 }
@@ -150,9 +159,17 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
                                             mFirestore1.collection("Student").document(student_id).collection(studentsList.get(position).getSemester()).document("Attendance").collection(subjectCode).document("Absent").collection("Absent").document().set(absentMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
-                                                    Toast.makeText(context, "Present", Toast.LENGTH_SHORT).show();
-                                                    holder.present.setEnabled(false);
-                                                    holder.absent.setEnabled(false);
+                                                    HashMap<String, Object> subjectDetails = new HashMap<>();
+                                                    subjectDetails.put("subjectTeacher", user_id);
+                                                    subjectDetails.put("subjectCode", subjectCode);
+                                                    mFirestore4.collection("Student").document(student_id).collection(studentsList.get(position).getSemester()).document(subjectCode).set(subjectDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            Toast.makeText(context, "Absent", Toast.LENGTH_SHORT).show();
+                                                            holder.present.setEnabled(false);
+                                                            holder.absent.setEnabled(false);
+                                                        }
+                                                    });
                                                 }
                                             });
                                         }

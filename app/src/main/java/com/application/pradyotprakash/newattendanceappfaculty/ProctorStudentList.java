@@ -4,9 +4,12 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -60,7 +63,7 @@ public class ProctorStudentList extends AppCompatActivity {
         setContentView(R.layout.activity_proctor_student_list);
         mToolbar = findViewById(R.id.studentListProctorToolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Select Semester");
+        getSupportActionBar().setTitle("Proctor Students");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         branch = getIntent().getStringExtra("branch");
@@ -95,6 +98,11 @@ public class ProctorStudentList extends AppCompatActivity {
                 }
             }
         });
+        DividerItemDecoration horizontalDecoration1 = new DividerItemDecoration(mStudentListView.getContext(),
+                DividerItemDecoration.VERTICAL);
+        Drawable horizontalDivider1 = ContextCompat.getDrawable(ProctorStudentList.this, R.drawable.horizontal_divider);
+        horizontalDecoration1.setDrawable(horizontalDivider1);
+        mStudentListView.addItemDecoration(horizontalDecoration1);
         finalMessage = findViewById(R.id.finalMessage);
         finalMessage.addTextChangedListener(new TextWatcher() {
             @Override

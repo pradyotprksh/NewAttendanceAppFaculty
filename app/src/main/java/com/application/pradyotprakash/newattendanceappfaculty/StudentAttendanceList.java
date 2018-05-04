@@ -1,16 +1,17 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
-import android.os.TokenWatcher;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,7 +64,7 @@ public class StudentAttendanceList extends AppCompatActivity {
         name = getIntent().getStringExtra("name");
         whichDay = getIntent().getStringExtra("whichDay");
         subjectCode = getIntent().getStringExtra("subjectCode");
-        classValueText = findViewById(R.id.classValue);
+        classValueText = findViewById(R.id.currentClassValue);
         subjectText = findViewById(R.id.subjectValue);
         fromText = findViewById(R.id.fromValue);
         toText = findViewById(R.id.toValue);
@@ -161,6 +162,17 @@ public class StudentAttendanceList extends AppCompatActivity {
                 doneTakeAttendance.setVisibility(View.INVISIBLE);
             }
         });
+        DividerItemDecoration horizontalDecoration = new DividerItemDecoration(mStudentListView.getContext(),
+                DividerItemDecoration.VERTICAL);
+        Drawable horizontalDivider = ContextCompat.getDrawable(StudentAttendanceList.this, R.drawable.horizontal_divider);
+        horizontalDecoration.setDrawable(horizontalDivider);
+        mStudentListView.addItemDecoration(horizontalDecoration);
+
+        DividerItemDecoration horizontalDecoration1 = new DividerItemDecoration(mStudentListViewEithAttendance.getContext(),
+                DividerItemDecoration.VERTICAL);
+        Drawable horizontalDivider1 = ContextCompat.getDrawable(StudentAttendanceList.this, R.drawable.horizontal_divider);
+        horizontalDecoration1.setDrawable(horizontalDivider1);
+        mStudentListViewEithAttendance.addItemDecoration(horizontalDecoration1);
     }
 
     @Override

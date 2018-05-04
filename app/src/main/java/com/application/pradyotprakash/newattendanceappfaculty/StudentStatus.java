@@ -1,12 +1,17 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,11 +36,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class StudentStatus extends AppCompatActivity {
 
     private static String subject, studentid, name, className;
+    private static String semester;
     private CircleImageView studentImage;
     private TextView studentName, studentUsn, studentBranch, studentSemester, studentClass, studentSubject, studentDaysPresent, studentPercentage;
     private FirebaseFirestore studentInformationFirestore;
     private Uri studentImageURI = null;
-    private Button sendMessage;
+    private Button sendMessage, seeMarks;
     private RecyclerView studentStatus;
     private List<StudentsStatus> studentsList;
     private StudentsStatusRecyclerAdapter studentRecyclerAdapter;
@@ -59,6 +65,13 @@ public class StudentStatus extends AppCompatActivity {
         studentDaysPresent = findViewById(R.id.student_days_present);
         studentPercentage = findViewById(R.id.student_percentage);
         studentInformationFirestore = FirebaseFirestore.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
+        studentStatus = findViewById(R.id.student_status);
+        studentsList = new ArrayList<>();
+        studentRecyclerAdapter = new StudentsStatusRecyclerAdapter(getApplicationContext(), studentsList);
+        studentStatus.setHasFixedSize(true);
+        studentStatus.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        studentStatus.setAdapter(studentRecyclerAdapter);
         studentInformationFirestore
                 .collection("Student")
                 .document(studentid)
@@ -71,15 +84,15 @@ public class StudentStatus extends AppCompatActivity {
                         String usn = task.getResult().getString("usn");
                         String branch = task.getResult().getString("branch");
                         className = task.getResult().getString("className");
-                        String semester = task.getResult().getString("semester");
+                        semester = task.getResult().getString("semester");
                         String image = task.getResult().getString("image");
                         studentImageURI = Uri.parse(image);
                         studentName.setText(name);
                         studentUsn.setText(usn);
                         studentBranch.setText(branch);
                         studentSemester.setText(semester);
-                        studentClass.setText(className);
-                        studentSubject.setText(subject);
+                        studentClass.setText("Class: " + className);
+                        studentSubject.setText("Subject Code: " + subject);
                         RequestOptions placeHolderRequest = new RequestOptions();
                         placeHolderRequest.placeholder(R.mipmap.default_profile_picture);
                         try {
@@ -96,8 +109,8 @@ public class StudentStatus extends AppCompatActivity {
                                         totalDays = task.getResult().getDouble("totalDays");
                                         days = task.getResult().getDouble("daysAttended");
                                         percentage = task.getResult().getDouble("percentage");
-                                        studentDaysPresent.setText(String.valueOf(days + " out of " + totalDays));
-                                        studentPercentage.setText(String.valueOf(percentage));
+                                        studentDaysPresent.setText(String.valueOf(days + " out of " + totalDays + " Attended"));
+                                        studentPercentage.setText(String.valueOf("Percentage: " + percentage));
                                         if (percentage < 75.0) {
                                             studentPercentage.setTextColor(Color.rgb(244, 67, 54));
                                         }
@@ -108,13 +121,6 @@ public class StudentStatus extends AppCompatActivity {
                                 }
                             }
                         });
-                        mFirestore = FirebaseFirestore.getInstance();
-                        studentStatus = findViewById(R.id.student_status);
-                        studentsList = new ArrayList<>();
-                        studentRecyclerAdapter = new StudentsStatusRecyclerAdapter(getApplicationContext(), studentsList);
-                        studentStatus.setHasFixedSize(true);
-                        studentStatus.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        studentStatus.setAdapter(studentRecyclerAdapter);
                         studentsList.clear();
                         mFirestore1.collection("Student").document(studentid).collection(semester).document("Attendance").collection(subject).document("Absent").collection("Absent").orderBy("date").addSnapshotListener(StudentStatus.this, new EventListener<QuerySnapshot>() {
                             @Override
@@ -138,6 +144,33 @@ public class StudentStatus extends AppCompatActivity {
                 }
             }
         });
+        DividerItemDecoration horizontalDecoration1 = new DividerItemDecoration(studentStatus.getContext(),
+                DividerItemDecoration.VERTICAL);
+        Drawable horizontalDivider1 = ContextCompat.getDrawable(StudentStatus.this, R.drawable.horizontal_divider);
+        horizontalDecoration1.setDrawable(horizontalDivider1);
+        studentStatus.addItemDecoration(horizontalDecoration1);
+
+        sendMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StudentStatus.this, AdminEachStudentNotification.class);
+                intent.putExtra("student_id", studentid);
+                intent.putExtra("name", name);
+                startActivity(intent);
+            }
+        });
+
+        seeMarks = findViewById(R.id.see_marks);
+        seeMarks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StudentStatus.this, FacultyEachSubjectStudentMarks.class);
+                intent.putExtra("studentId", studentid);
+                intent.putExtra("semester", semester);
+                intent.putExtra("subjectCode", subject);
+                startActivity(intent);
+            }
+        });
     }
 
     public static String getStudentid() {
@@ -151,4 +184,9 @@ public class StudentStatus extends AppCompatActivity {
     public static String getClassName() {
         return className;
     }
+
+    public static String getSemester() {
+        return semester;
+    }
+
 }

@@ -61,7 +61,7 @@ public class NotificationFragment extends Fragment {
         mNotificationListView.setAdapter(notificationRecyclerAdapter);
         notificationList.clear();
         mFirestore = FirebaseFirestore.getInstance();
-        mFirestore.collection("Faculty").document(user_id).collection("Notifications").orderBy("on", Query.Direction.DESCENDING).addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+        mFirestore.collection("Faculty").document(user_id).collection("Notifications").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                 for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {

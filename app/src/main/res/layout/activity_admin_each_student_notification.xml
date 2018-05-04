@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EachSubjectStudentMarks">
+    tools:context="com.application.pradyotprakash.newattendanceappfaculty.AdminEachStudentNotification">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/facultySetupToolbar"
+        android:id="@+id/adminStudentNotifyToolbarSingle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
@@ -16,58 +16,68 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/internalMarks"
+    <TextView
+        android:id="@+id/labelSingle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/button_layout_background"
-        android:backgroundTint="@color/colorAccent"
-        android:text="Internals"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:layout_marginTop="92dp"
+        android:text="Send Notification To"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/facultySetupToolbar" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/studentMessageSingle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="200dp"
+        android:background="@drawable/edittext_layout_background"
+        android:ems="10"
+        android:hint="Enter Message..."
+        android:inputType="textMultiLine"
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/labelSingle" />
 
     <Button
-        android:id="@+id/externalMarks"
+        android:id="@+id/sendToStudentSingle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="64dp"
         android:background="@drawable/button_layout_background"
-        android:backgroundTint="@color/colorAccent"
-        android:text="External"
+        android:padding="15dp"
+        android:text="Send Notification"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/internalMarks" />
+        app:layout_constraintTop_toBottomOf="@+id/studentMessageSingle" />
 
-    <Button
-        android:id="@+id/seeMarks"
+    <ProgressBar
+        android:id="@+id/sendingNotifBarSingle"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/button_layout_background"
-        android:backgroundTint="@color/colorAccent"
-        android:text="Total Marks"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:layout_marginTop="56dp"
+        android:indeterminate="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/externalMarks" />
+        app:layout_constraintTop_toTopOf="@+id/adminStudentNotifyToolbarSingle"
+        tools:visibility="invisible" />
 
 </android.support.constraint.ConstraintLayout>
