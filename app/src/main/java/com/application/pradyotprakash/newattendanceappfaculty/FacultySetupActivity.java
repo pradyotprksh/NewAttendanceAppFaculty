@@ -54,7 +54,7 @@ public class FacultySetupActivity extends AppCompatActivity {
     private boolean isChanged = false;
     private ImageView branchSpinner;
     private CheckBox classTeacher, proctor;
-    String isClassTeacherChecked, isProctorChecked;
+    String isClassTeacherChecked = "false", isProctorChecked = "false";
     private static final String[] branch = new String[]{"Bio Technology Engineering", "Civil Engineering", "Computer Science Engineering", "Electrical & Electronics Engineering", "Electronics & Comm. Engineering", "Information Science & Engineering", "Mechanical Engineering"};
 
     @Override
@@ -136,6 +136,8 @@ public class FacultySetupActivity extends AppCompatActivity {
                         facultyId.setEnabled(true);
                         facultyBranch.setEnabled(true);
                         branchSpinner.setEnabled(true);
+                        classTeacher.setClickable(true);
+                        proctor.setClickable(true);
                     }
                 } else {
                     String retrieving_error = task.getException().getMessage();
@@ -226,6 +228,16 @@ public class FacultySetupActivity extends AppCompatActivity {
         } else {
             download_uri = facultyMainImageURI;
         }
+        if (classTeacher.isChecked()) {
+            isClassTeacherChecked = "true";
+        } else {
+            isClassTeacherChecked = "false";
+        }
+        if (proctor.isChecked()) {
+            isProctorChecked = "true";
+        } else {
+            isProctorChecked = "false";
+        }
         String token_id = FirebaseInstanceId.getInstance().getToken();
         HashMap<String, String> facultyMap = new HashMap<>();
         facultyMap.put("name", faculty_name);
@@ -241,11 +253,12 @@ public class FacultySetupActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(FacultySetupActivity.this, "All the Data Has Been Uploaded.", Toast.LENGTH_LONG).show();
+                    facultySetupProgress.setVisibility(View.INVISIBLE);
                 } else {
                     String image_error = task.getException().getMessage();
                     Toast.makeText(FacultySetupActivity.this, "Error: " + image_error, Toast.LENGTH_SHORT).show();
+                    facultySetupProgress.setVisibility(View.INVISIBLE);
                 }
-                facultySetupProgress.setVisibility(View.INVISIBLE);
             }
         });
     }

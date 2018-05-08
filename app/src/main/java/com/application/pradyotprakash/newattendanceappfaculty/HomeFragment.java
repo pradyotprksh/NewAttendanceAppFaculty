@@ -224,6 +224,9 @@ public class HomeFragment extends Fragment {
         eventTitle = view.findViewById(R.id.eventTitle);
         eventDescription = view.findViewById(R.id.uploadedBy);
         eventUploadedOn = view.findViewById(R.id.eventUploadedOn);
+        eventDescription.setVisibility(View.INVISIBLE);
+        eventTitle.setVisibility(View.INVISIBLE);
+        eventUploadedOn.setVisibility(View.INVISIBLE);
         mFirestore7 = FirebaseFirestore.getInstance();
         notesList = new ArrayList<>();
         mFirestore7.collection("Events").orderBy("uploadedOn").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
@@ -236,7 +239,10 @@ public class HomeFragment extends Fragment {
                         notesList.add(noteList1);
                     }
                 }
-                for (position = 0; position <= notesList.size(); position++) {
+                for (position = 0; position < notesList.size(); position++) {
+                    eventDescription.setVisibility(View.VISIBLE);
+                    eventTitle.setVisibility(View.VISIBLE);
+                    eventUploadedOn.setVisibility(View.VISIBLE);
                     if (position == 0) {
                         if (notesList.get(position).getUploadedBy().equals(user_id)) {
                             eventTitle.setTextColor(Color.rgb(244, 67, 54));
