@@ -78,7 +78,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="360dp"
         android:padding="10dp"
-        android:text="Average"
+        android:text="Click Calculate Average Button To Calculate Average"
         android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

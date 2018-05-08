@@ -1,5 +1,6 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +40,7 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
     private Button updateMarks, calculateAverage;
     private String internalSelectedValue;
     private TextView currentAverage;
+    private ProgressDialog progress, progress1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,12 +157,18 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
             }
         });
+        progress = new ProgressDialog(EachSubjectStudentInternalMarks.this);
+        progress.setTitle("Please Wait.");
+        progress.setMessage("Uploading Internal Marks.");
+        progress.setCancelable(false);
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         updateMarks = findViewById(R.id.updateMarks);
         mFirestore2 = FirebaseFirestore.getInstance();
         updateMarks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(internalSelectedValue) && !(TextUtils.isEmpty(marksObtainedValue.getText().toString())) && !(TextUtils.isEmpty(totalMarksValue.getText().toString()))) {
+                    progress.show();
                     boolean abCheck = Pattern.matches("ab", marksObtainedValue.getText().toString());
                     boolean checkAB = Pattern.matches("AB", marksObtainedValue.getText().toString());
                     boolean intCheck = Pattern.matches("[0-9]+", marksObtainedValue.getText().toString());
@@ -173,6 +181,7 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(EachSubjectStudentInternalMarks.this, "Marks Entered.", Toast.LENGTH_SHORT).show();
                                 marksObtainedValue.setText("");
+                                progress.dismiss();
                             }
                         });
                     } else if (intCheck) {
@@ -185,16 +194,20 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(EachSubjectStudentInternalMarks.this, "Marks Entered.", Toast.LENGTH_SHORT).show();
                                     marksObtainedValue.setText("");
+                                    progress.dismiss();
                                 }
                             });
                         } else {
                             Toast.makeText(EachSubjectStudentInternalMarks.this, "Obtained Marks is Greater than Total Marks.", Toast.LENGTH_SHORT).show();
+                            progress.dismiss();
                         }
                     } else {
                         Toast.makeText(EachSubjectStudentInternalMarks.this, "Give Correct Input.", Toast.LENGTH_SHORT).show();
+                        progress.dismiss();
                     }
                 } else {
                     Toast.makeText(EachSubjectStudentInternalMarks.this, "Enter The Details.", Toast.LENGTH_SHORT).show();
+                    progress.dismiss();
                 }
             }
         });
@@ -202,11 +215,17 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
         mFirestore1 = FirebaseFirestore.getInstance();
         mFirestore3 = FirebaseFirestore.getInstance();
         mFirestore4 = FirebaseFirestore.getInstance();
+        progress1 = new ProgressDialog(EachSubjectStudentInternalMarks.this);
+        progress1.setTitle("Please Wait.");
+        progress1.setMessage("Calculating Internal Average Marks.");
+        progress1.setCancelable(false);
+        progress1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         currentAverage = findViewById(R.id.currentAverage);
         calculateAverage = findViewById(R.id.calculateAverage);
         calculateAverage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progress1.show();
                 mFirestore1.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document("Internal 1").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -241,29 +260,36 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
                                                                     if (internal2 >= internal3) {
                                                                         averageValue = (internal1 + internal2) / 2;
                                                                         currentAverage.setText(String.valueOf(averageValue));
+                                                                        progress1.dismiss();
                                                                     } else {
                                                                         averageValue = (internal1 + internal3) / 2;
                                                                         currentAverage.setText(String.valueOf(averageValue));
+                                                                        progress1.dismiss();
                                                                     }
                                                                 } else if (internal2 >= internal1 && internal2 >= internal3) {
                                                                     if (internal1 >= internal3) {
                                                                         averageValue = (internal2 + internal1) / 2;
                                                                         currentAverage.setText(String.valueOf(averageValue));
+                                                                        progress1.dismiss();
                                                                     } else {
                                                                         averageValue = (internal2 + internal3) / 2;
                                                                         currentAverage.setText(String.valueOf(averageValue));
+                                                                        progress1.dismiss();
                                                                     }
                                                                 } else if (internal3 >= internal1 && internal3 >= internal2) {
                                                                     if (internal1 >= internal2) {
                                                                         averageValue = (internal3 + internal1) / 2;
                                                                         currentAverage.setText(String.valueOf(averageValue));
+                                                                        progress1.dismiss();
                                                                     } else {
                                                                         averageValue = (internal3 + internal2) / 2;
                                                                         currentAverage.setText(String.valueOf(averageValue));
+                                                                        progress1.dismiss();
                                                                     }
                                                                 }
                                                                 if (averageValue < 15) {
                                                                     currentAverage.setTextColor(Color.rgb(244, 67, 54));
+                                                                    progress1.dismiss();
                                                                 }
                                                             }
                                                         }

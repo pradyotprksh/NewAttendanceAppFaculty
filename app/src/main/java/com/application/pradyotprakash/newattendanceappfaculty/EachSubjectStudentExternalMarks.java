@@ -1,5 +1,6 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ public class EachSubjectStudentExternalMarks extends AppCompatActivity {
     private EditText marksObtainedValue, totalMarksValue;
     private Button updateMarks;
     private FirebaseFirestore mFirestore, mFirestore1, mFirestore2;
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +45,16 @@ public class EachSubjectStudentExternalMarks extends AppCompatActivity {
         mFirestore = FirebaseFirestore.getInstance();
         mFirestore1 = FirebaseFirestore.getInstance();
         mFirestore2 = FirebaseFirestore.getInstance();
+        progress = new ProgressDialog(EachSubjectStudentExternalMarks.this);
+        progress.setTitle("Please Wait.");
+        progress.setMessage("Uploading External Marks.");
+        progress.setCancelable(false);
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         updateMarks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!(TextUtils.isEmpty(marksObtainedValue.getText().toString())) && !(TextUtils.isEmpty(totalMarksValue.getText().toString()))) {
+                    progress.show();
                     boolean abCheck = Pattern.matches("ab", marksObtainedValue.getText().toString());
                     boolean checkAB = Pattern.matches("AB", marksObtainedValue.getText().toString());
                     boolean intCheck = Pattern.matches("[0-9]+", marksObtainedValue.getText().toString());
@@ -59,6 +67,7 @@ public class EachSubjectStudentExternalMarks extends AppCompatActivity {
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(EachSubjectStudentExternalMarks.this, "Marks Entered.", Toast.LENGTH_SHORT).show();
                                 marksObtainedValue.setText("");
+                                progress.dismiss();
                             }
                         });
                     } else if (intCheck) {
@@ -71,16 +80,20 @@ public class EachSubjectStudentExternalMarks extends AppCompatActivity {
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(EachSubjectStudentExternalMarks.this, "Marks Entered.", Toast.LENGTH_SHORT).show();
                                     marksObtainedValue.setText("");
+                                    progress.dismiss();
                                 }
                             });
                         } else {
                             Toast.makeText(EachSubjectStudentExternalMarks.this, "Obtained Marks is Greater than Total Marks.", Toast.LENGTH_SHORT).show();
+                            progress.dismiss();
                         }
                     } else {
                         Toast.makeText(EachSubjectStudentExternalMarks.this, "Give Correct Input.", Toast.LENGTH_SHORT).show();
+                        progress.dismiss();
                     }
                 } else {
                     Toast.makeText(EachSubjectStudentExternalMarks.this, "Enter The Details.", Toast.LENGTH_SHORT).show();
+                    progress.dismiss();
                 }
             }
         });
