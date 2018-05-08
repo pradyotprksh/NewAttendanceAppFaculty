@@ -54,7 +54,7 @@ public class FacultySetupActivity extends AppCompatActivity {
     private boolean isChanged = false;
     private ImageView branchSpinner;
     private CheckBox classTeacher, proctor;
-    String isClassTeacherChecked;
+    String isClassTeacherChecked, isProctorChecked;
     private static final String[] branch = new String[]{"Bio Technology Engineering", "Civil Engineering", "Computer Science Engineering", "Electrical & Electronics Engineering", "Electronics & Comm. Engineering", "Information Science & Engineering", "Mechanical Engineering"};
 
     @Override
@@ -64,8 +64,6 @@ public class FacultySetupActivity extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.facultySetupToolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Your Details");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         facultySetupProgress = findViewById(R.id.faculty_setup_progress);
         facultySetupImage = findViewById(R.id.faculty_setup_image);
         facultyId = findViewById(R.id.faculty_setup_id);
@@ -93,6 +91,8 @@ public class FacultySetupActivity extends AppCompatActivity {
         facultyId.setEnabled(false);
         classTeacher.setClickable(false);
         proctor.setClickable(false);
+        facultyBranch.setEnabled(false);
+        branchSpinner.setEnabled(false);
         facultySetupFirestore.collection("Faculty").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -103,7 +103,7 @@ public class FacultySetupActivity extends AppCompatActivity {
                         String id = task.getResult().getString("id");
                         String image = task.getResult().getString("image");
                         isClassTeacherChecked = task.getResult().getString("classTeacherValue");
-                        String isProctorChecked = task.getResult().getString("proctorValue");
+                        isProctorChecked = task.getResult().getString("proctorValue");
                         try {
                             classTeacherOf = task.getResult().getString("classTeacherOf");
                         } catch (Exception e) {
@@ -128,10 +128,14 @@ public class FacultySetupActivity extends AppCompatActivity {
                         Glide.with(FacultySetupActivity.this).setDefaultRequestOptions(placeHolderRequest).load(image).into(facultySetupImage);
                         facultyName.setEnabled(false);
                         facultyId.setEnabled(false);
+                        facultyBranch.setEnabled(false);
+                        branchSpinner.setEnabled(false);
                     } else {
                         Toast.makeText(FacultySetupActivity.this, "Fill All The Data and Upload a Profile Image.", Toast.LENGTH_SHORT).show();
                         facultyName.setEnabled(true);
                         facultyId.setEnabled(true);
+                        facultyBranch.setEnabled(true);
+                        branchSpinner.setEnabled(true);
                     }
                 } else {
                     String retrieving_error = task.getException().getMessage();
@@ -177,12 +181,17 @@ public class FacultySetupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (facultyEditSetupBtn.getText().toString().equals("Edit Details")) {
+                    Toast.makeText(FacultySetupActivity.this, "Click On Add Details After Editing.", Toast.LENGTH_SHORT).show();
                     facultyName.setEnabled(true);
                     facultyId.setEnabled(true);
+                    facultyBranch.setEnabled(true);
+                    branchSpinner.setEnabled(true);
                     facultyEditSetupBtn.setText("Done Editing");
                 } else if (facultyEditSetupBtn.getText().toString().equals("Done Editing")){
                     facultyName.setEnabled(false);
                     facultyId.setEnabled(false);
+                    facultyBranch.setEnabled(false);
+                    branchSpinner.setEnabled(false);
                     facultyEditSetupBtn.setText("Edit Details");
                 }
             }
@@ -226,6 +235,7 @@ public class FacultySetupActivity extends AppCompatActivity {
         facultyMap.put("token_id", token_id);
         facultyMap.put("classTeacherOf", classTeacherOf);
         facultyMap.put("classTeacherValue", isClassTeacherChecked);
+        facultyMap.put("proctorValue", isProctorChecked);
         facultySetupFirestore.collection("Faculty").document(user_id).set(facultyMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

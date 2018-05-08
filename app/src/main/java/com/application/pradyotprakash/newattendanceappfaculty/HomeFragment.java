@@ -123,7 +123,7 @@ public class HomeFragment extends Fragment {
                         newNotificationList.add(notification);
                     }
                 }
-                for (position = 0; position < 2; position++) {
+                for (position = 0; position < newNotificationList.size(); position++) {
                     if (position == 0) {
                         message.setVisibility(View.VISIBLE);
                         from.setVisibility(View.VISIBLE);
@@ -163,59 +163,63 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        mFirestore6 = FirebaseFirestore.getInstance();
-        firstNotification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFirestore6.collection("Faculty").document(user_id).collection("Notifications").orderBy("on", Query.Direction.DESCENDING).addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                        for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
-                            if (doc.getType() == DocumentChange.Type.ADDED) {
-                                NewNotification notification = doc.getDocument().toObject(NewNotification.class);
-                                newNotificationList.add(notification);
-                            }
-                        }
-                        for (position = 0; position < 2; position++) {
-                            if (position == 0) {
-                                Intent notificationIndent = new Intent(getContext(), NotificationActivity.class);
-                                notificationIndent.putExtra("message", newNotificationList.get(position).getMessage());
-                                notificationIndent.putExtra("from_user_id", newNotificationList.get(position).getFrom());
-                                notificationIndent.putExtra("from_designation", newNotificationList.get(position).getDesignation());
-                                notificationIndent.putExtra("message_on", newNotificationList.get(position).getOn());
-                                startActivity(notificationIndent);
-                            }
-                        }
-                    }
-                });
-            }
-        });
-        secondNotification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFirestore6.collection("Faculty").document(user_id).collection("Notifications").orderBy("on", Query.Direction.DESCENDING).addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                        for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
-                            if (doc.getType() == DocumentChange.Type.ADDED) {
-                                NewNotification notification = doc.getDocument().toObject(NewNotification.class);
-                                newNotificationList.add(notification);
-                            }
-                        }
-                        for (position = 0; position < 2; position++) {
-                            if (position == 1) {
-                                Intent notificationIndent = new Intent(getContext(), NotificationActivity.class);
-                                notificationIndent.putExtra("message", newNotificationList.get(position).getMessage());
-                                notificationIndent.putExtra("from_user_id", newNotificationList.get(position).getFrom());
-                                notificationIndent.putExtra("from_designation", newNotificationList.get(position).getDesignation());
-                                notificationIndent.putExtra("message_on", newNotificationList.get(position).getOn());
-                                startActivity(notificationIndent);
-                            }
-                        }
-                    }
-                });
-            }
-        });
+//        mFirestore6 = FirebaseFirestore.getInstance();
+//        firstNotification.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mFirestore6.collection("Faculty").document(user_id).collection("Notifications").orderBy("on", Query.Direction.DESCENDING).addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+//                        for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
+//                            if (doc.getType() == DocumentChange.Type.ADDED) {
+//                                String notification_id = doc.getDocument().getId();
+//                                NewNotification notification = doc.getDocument().toObject(NewNotification.class).withId(notification_id);
+//                                newNotificationList.add(notification);
+//                            }
+//                        }
+//                        for (position = 0; position <= newNotificationList.size(); position++) {
+//                            if (position == 0) {
+//                                Intent notificationIndent = new Intent(getContext(), NotificationActivity.class);
+//                                notificationIndent.putExtra("message", newNotificationList.get(position).getMessage());
+//                                notificationIndent.putExtra("from_user_id", newNotificationList.get(position).getFrom());
+//                                notificationIndent.putExtra("from_designation", newNotificationList.get(position).getDesignation());
+//                                notificationIndent.putExtra("message_on", newNotificationList.get(position).getOn());
+//                                notificationIndent.putExtra("notificationId", newNotificationList.get(position).notificationId);
+//                                startActivity(notificationIndent);
+//                            }
+//                        }
+//                    }
+//                });
+//            }
+//        });
+//        secondNotification.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mFirestore6.collection("Faculty").document(user_id).collection("Notifications").orderBy("on", Query.Direction.DESCENDING).addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+//                        for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
+//                            if (doc.getType() == DocumentChange.Type.ADDED) {
+//                                String notification_id = doc.getDocument().getId();
+//                                NewNotification notification = doc.getDocument().toObject(NewNotification.class).withId(notification_id);
+//                                newNotificationList.add(notification);
+//                            }
+//                        }
+//                        for (position = 0; position <= newNotificationList.size(); position++) {
+//                            if (position == 1) {
+//                                Intent notificationIndent = new Intent(getContext(), NotificationActivity.class);
+//                                notificationIndent.putExtra("message", newNotificationList.get(position).getMessage());
+//                                notificationIndent.putExtra("from_user_id", newNotificationList.get(position).getFrom());
+//                                notificationIndent.putExtra("from_designation", newNotificationList.get(position).getDesignation());
+//                                notificationIndent.putExtra("message_on", newNotificationList.get(position).getOn());
+//                                notificationIndent.putExtra("notificationId", newNotificationList.get(position).notificationId);
+//                                startActivity(notificationIndent);
+//                            }
+//                        }
+//                    }
+//                });
+//            }
+//        });
         newEvent = view.findViewById(R.id.newEvent);
         eventTitle = view.findViewById(R.id.eventTitle);
         eventDescription = view.findViewById(R.id.uploadedBy);

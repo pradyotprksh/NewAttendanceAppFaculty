@@ -20,8 +20,6 @@ public class EachSubjectStudentMarks extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.facultySetupToolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Marks");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         studentId = getIntent().getStringExtra("studentId");
         subjectCode = getIntent().getStringExtra("subjectCode");
         semester = getIntent().getStringExtra("semester");

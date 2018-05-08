@@ -64,8 +64,6 @@ public class ProctorStudentList extends AppCompatActivity {
         mToolbar = findViewById(R.id.studentListProctorToolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Proctor Students");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         branch = getIntent().getStringExtra("branch");
         addStudent = findViewById(R.id.addStudent);
         addStudent.setOnClickListener(new View.OnClickListener() {

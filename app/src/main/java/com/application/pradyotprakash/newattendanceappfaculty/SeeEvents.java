@@ -32,8 +32,6 @@ public class SeeEvents extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.uploadNotesToolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Uploaded Events");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         mFirestore = FirebaseFirestore.getInstance();
         noteList = findViewById(R.id.noteList);
         notesList = new ArrayList<>();

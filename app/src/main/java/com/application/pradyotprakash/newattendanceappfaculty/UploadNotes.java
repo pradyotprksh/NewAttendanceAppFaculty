@@ -62,8 +62,6 @@ public class UploadNotes extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.uploadNotesToolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Upload Notes");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         noteTitle = findViewById(R.id.noteTitle);
         noteDescription = findViewById(R.id.noteDescription);
         noteName = findViewById(R.id.noteName);
@@ -147,7 +145,7 @@ public class UploadNotes extends AppCompatActivity {
                     noteMapXerox.put("noteLink", download_uri.toString());
                     noteMapXerox.put("uploadedOn", date);
                     noteMapXerox.put("classValue", classValue);
-                    noteMapXerox.put("downloaded", "false");
+                    noteMapXerox.put("semester", semesterValue);
                     mFirestore1.collection("Notes").document(name + title + date).set(noteMapXerox).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {

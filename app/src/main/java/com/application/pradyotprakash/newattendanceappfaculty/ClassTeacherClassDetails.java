@@ -36,8 +36,6 @@ public class ClassTeacherClassDetails extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.facultySetupToolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(classValue + " Details");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         mFirestore = FirebaseFirestore.getInstance();
         mStudentListView = findViewById(R.id.studentList);
         studentsList = new ArrayList<>();

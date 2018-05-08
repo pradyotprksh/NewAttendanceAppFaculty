@@ -1,5 +1,7 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -7,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,11 +63,24 @@ public class FacultyMainActivity extends AppCompatActivity {
                 sendToSetup();
             }
         });
+        faculty_main_toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendToSetup();
+            }
+        });
+        facultyMainName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendToSetup();
+            }
+        });
         facultyMainBottomNavigation = findViewById(R.id.facultyBottomNavigation);
         homeFragment = new HomeFragment();
         notificationFragment = new NotificationFragment();
         notesFragment = new NotesFragment();
         detailsFragment = new DetailsFragment();
+        facultyMainBottomNavigation.setEnabled(false);
         facultyMainBottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -109,6 +125,7 @@ public class FacultyMainActivity extends AppCompatActivity {
                             RequestOptions placeHolderRequest = new RequestOptions();
                             placeHolderRequest.placeholder(R.mipmap.default_profile_picture);
                             Glide.with(FacultyMainActivity.this).setDefaultRequestOptions(placeHolderRequest).load(image).into(facultyMainImage);
+                            facultyMainBottomNavigation.setEnabled(true);
                         }
                     } else {
                         String retrieving_error = task.getException().getMessage();
@@ -140,15 +157,35 @@ public class FacultyMainActivity extends AppCompatActivity {
     }
 
     private void logOut() {
-        Map<String, Object> tokenRemoveMap = new HashMap<>();
-        tokenRemoveMap.put("token_id", FieldValue.delete());
-        facultyMainFirestore.collection("Faculty").document(user_id).update(tokenRemoveMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                mAuth.signOut();
-                sendToLogin();
-            }
-        });
+        LayoutInflater li = LayoutInflater.from(FacultyMainActivity.this);
+        View promptsView = li.inflate(R.layout.prompts1, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                FacultyMainActivity.this);
+        alertDialogBuilder.setView(promptsView);
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Map<String, Object> tokenRemoveMap = new HashMap<>();
+                                tokenRemoveMap.put("token_id", FieldValue.delete());
+                                facultyMainFirestore.collection("Faculty").document(user_id).update(tokenRemoveMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        mAuth.signOut();
+                                        sendToLogin();
+                                    }
+                                });
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     private void sendToLogin() {

@@ -43,8 +43,6 @@ public class FacultySeeNotes extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.uploadNotesToolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Notes List");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         mFirestore = FirebaseFirestore.getInstance();
         noteList = findViewById(R.id.noteList);
         notesList = new ArrayList<>();

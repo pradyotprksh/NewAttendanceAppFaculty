@@ -41,8 +41,6 @@ public class ChangeStudentValuesProctor extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.studentInternalToolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Change Semester & Class");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         studentId = getIntent().getStringExtra("studentId");
         semesterOption = findViewById(R.id.faculty_selectclass);
         semesterSpinner = findViewById(R.id.semester_spinner);

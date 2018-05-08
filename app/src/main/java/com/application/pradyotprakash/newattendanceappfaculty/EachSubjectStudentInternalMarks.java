@@ -47,8 +47,6 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.studentInternalToolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Internal Marks");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         studentId = getIntent().getStringExtra("studentId");
         subjectCode = getIntent().getStringExtra("subjectCode");
         semester = getIntent().getStringExtra("semester");

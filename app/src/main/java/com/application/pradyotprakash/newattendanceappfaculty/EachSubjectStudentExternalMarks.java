@@ -34,8 +34,6 @@ public class EachSubjectStudentExternalMarks extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.studentExternalToolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("External Marks");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         studentId = getIntent().getStringExtra("studentId");
         subjectCode = getIntent().getStringExtra("subjectCode");
         semester = getIntent().getStringExtra("semester");

@@ -1,6 +1,6 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
-public class NewNotification {
+public class NewNotification extends NewNotificationId{
 
     String from, message, on, designation, senderName, senderImage;
 

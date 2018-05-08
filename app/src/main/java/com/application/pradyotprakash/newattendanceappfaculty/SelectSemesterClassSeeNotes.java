@@ -44,8 +44,6 @@ public class SelectSemesterClassSeeNotes extends AppCompatActivity {
         mToolbar = findViewById(R.id.faculty_selectsemester_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Select Semester");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         branch = getIntent().getStringExtra("branch");
         semesterOption = findViewById(R.id.faculty_selectclass);
         semesterSpinner = findViewById(R.id.semester_spinner);

@@ -60,8 +60,6 @@ public class UploadEvents extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.uploadNotesToolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Upload Event");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         pickDate = findViewById(R.id.eventDate);
         pickDate.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

@@ -30,7 +30,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".FacultySetupActivity"
-            android:parentActivityName=".FacultyMainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
@@ -60,15 +59,33 @@
         <activity
             android:name=".ProctorStudentList"
             android:screenOrientation="portrait" />
-        <activity android:name=".StudentDetailsProctor" />
-        <activity android:name=".EachSubjectStudentDetails" />
-        <activity android:name=".EachSubjectStudentMarks" />
-        <activity android:name=".EachSubjectStudentInternalMarks" />
-        <activity android:name=".EachSubjectStudentExternalMarks" />
-        <activity android:name=".UploadNotes" />
-        <activity android:name=".SelectSemesterClassNotes" />
-        <activity android:name=".SelectSemesterClassSeeNotes" />
-        <activity android:name=".FacultySeeNotes" />
+        <activity
+            android:name=".StudentDetailsProctor"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EachSubjectStudentDetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EachSubjectStudentMarks"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EachSubjectStudentInternalMarks"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EachSubjectStudentExternalMarks"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UploadNotes"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SelectSemesterClassNotes"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SelectSemesterClassSeeNotes"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FacultySeeNotes"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".NotificationActivity"
             android:screenOrientation="portrait">
@@ -78,13 +95,24 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".UploadEvents" />
-        <activity android:name=".SeeEvents" />
-        <activity android:name=".EachEventInformation" />
-        <activity android:name=".ClassTeacherClassDetails" />
-        <activity android:name=".AdminEachStudentNotification" />
-        <activity android:name=".OnlyFacultySubjectDetails" />
-
+        <activity
+            android:name=".UploadEvents"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SeeEvents"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EachEventInformation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ClassTeacherClassDetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AdminEachStudentNotification"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".OnlyFacultySubjectDetails"
+            android:screenOrientation="portrait" />
         <service android:name=".FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -94,15 +122,21 @@
             android:name=".MyService"
             android:enabled="true"
             android:exported="true" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
-
-        <activity android:name=".FacultyEachSubjectStudentMarks" />
-        <activity android:name=".ChangeStudentValuesProctor" />
-        <activity android:name=".OtherSemesterDetails" />
-        <activity android:name=".OtherSemesterEachSubjectStudentDetails"></activity>
+        <activity
+            android:name=".FacultyEachSubjectStudentMarks"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ChangeStudentValuesProctor"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".OtherSemesterDetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".OtherSemesterEachSubjectStudentDetails"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

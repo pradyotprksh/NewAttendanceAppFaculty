@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -24,7 +25,7 @@
 
     <TextView
         android:id="@+id/message_value"
-        android:layout_width="match_parent"
+        android:layout_width="226dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/sender_name"
         android:layout_below="@+id/sender_list_image"
@@ -44,5 +45,22 @@
         android:text="Loading Time..."
         android:textSize="13sp"
         android:textStyle="italic" />
+
+    <LinearLayout
+        android:layout_width="44dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/sender_list_image"
+        android:layout_below="@+id/sender_list_image"
+        android:layout_marginTop="-20dp">
+
+        <com.like.LikeButton
+            android:id="@+id/star_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon_size="25dp"
+            app:icon_type="star"
+            app:is_enabled="false" />
+
+    </LinearLayout>
 
 </RelativeLayout>

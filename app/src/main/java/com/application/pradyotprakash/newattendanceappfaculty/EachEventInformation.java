@@ -42,8 +42,6 @@ public class EachEventInformation extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.uploadNotesToolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(title);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         eventTitle = findViewById(R.id.eventTitle);
         eventDescrption = findViewById(R.id.eventDescription);
         eventUploadedBy = findViewById(R.id.uploadedBy);

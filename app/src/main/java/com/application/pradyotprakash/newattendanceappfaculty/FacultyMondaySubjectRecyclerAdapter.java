@@ -1,11 +1,19 @@
 package com.application.pradyotprakash.newattendanceappfaculty;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -13,6 +21,9 @@ public class FacultyMondaySubjectRecyclerAdapter extends RecyclerView.Adapter<Fa
 
     private List<FacultyMondaySubjects> subjectList;
     private Context context;
+    private FirebaseAuth mAuth;
+    private String userId, name;
+    private FirebaseFirestore mFirestore;
 
 
     public FacultyMondaySubjectRecyclerAdapter(List<FacultyMondaySubjects> subjectList, Context context) {
@@ -28,6 +39,19 @@ public class FacultyMondaySubjectRecyclerAdapter extends RecyclerView.Adapter<Fa
 
     @Override
     public void onBindViewHolder(final FacultyMondaySubjectRecyclerAdapter.ViewHolder holder, final int position) {
+        mAuth = FirebaseAuth.getInstance();
+        userId = mAuth.getCurrentUser().getUid();
+        mFirestore = FirebaseFirestore.getInstance();
+        mFirestore.collection("Faculty").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().exists()) {
+                        name = task.getResult().getString("name");
+                    }
+                }
+            }
+        });
         if (subjectList.get(position).getWeekDay().equals("Monday")) {
             holder.timeValue.setText(subjectList.get(position).getFrom() + " : " + subjectList.get(position).getTo());
             holder.classValue.setText(subjectList.get(position).getClassValue());
@@ -37,6 +61,25 @@ public class FacultyMondaySubjectRecyclerAdapter extends RecyclerView.Adapter<Fa
             holder.mView.setVisibility(View.INVISIBLE);
             holder.mView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
         }
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, StudentAttendanceList.class);
+                        intent.putExtra("classValue", subjectList.get(position).getClassValue());
+                        intent.putExtra("subject", subjectList.get(position).getSubjectName());
+                        intent.putExtra("subjectCode", subjectList.get(position).getSubjectCode());
+                        intent.putExtra("from", subjectList.get(position).getFrom());
+                        intent.putExtra("to", subjectList.get(position).getTo());
+                        intent.putExtra("name", name);
+                        intent.putExtra("whichDay", subjectList.get(position).getWeekDay());
+                        context.startActivity(intent);
+                    }
+                });
+            }
+        });
     }
 
     @Override
