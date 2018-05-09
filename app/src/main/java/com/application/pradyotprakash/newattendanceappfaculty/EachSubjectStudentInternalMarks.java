@@ -35,12 +35,11 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
     private ImageView internalSpinner;
     private static final String[] branch = new String[]{"Internal 1", "Internal 2", "Internal 3"};
     private EditText marksObtainedValue, totalMarksValue;
-    private FirebaseFirestore mFirestore, mFirestore2, mFirestore1, mFirestore3, mFirestore4;
+    private FirebaseFirestore mFirestore;
     private int marksObtained, totalMarks, internal1, internal2, internal3, averageValue;
-    private Button updateMarks, calculateAverage;
+    private Button updateMarks;
     private String internalSelectedValue;
-    private TextView currentAverage;
-    private ProgressDialog progress, progress1;
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +63,7 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
                 internalValues.showDropDown();
             }
         });
+        mFirestore = FirebaseFirestore.getInstance();
         internalValues.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -71,6 +71,7 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                marksObtainedValue.setText("");
                 internalSelectedValue = internalValues.getText().toString();
                 if (internalSelectedValue.equals("Internal 1")) {
                     try {
@@ -163,7 +164,6 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
         progress.setCancelable(false);
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         updateMarks = findViewById(R.id.updateMarks);
-        mFirestore2 = FirebaseFirestore.getInstance();
         updateMarks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,100 +209,6 @@ public class EachSubjectStudentInternalMarks extends AppCompatActivity {
                     Toast.makeText(EachSubjectStudentInternalMarks.this, "Enter The Details.", Toast.LENGTH_SHORT).show();
                     progress.dismiss();
                 }
-            }
-        });
-        mFirestore = FirebaseFirestore.getInstance();
-        mFirestore1 = FirebaseFirestore.getInstance();
-        mFirestore3 = FirebaseFirestore.getInstance();
-        mFirestore4 = FirebaseFirestore.getInstance();
-        progress1 = new ProgressDialog(EachSubjectStudentInternalMarks.this);
-        progress1.setTitle("Please Wait.");
-        progress1.setMessage("Calculating Internal Average Marks.");
-        progress1.setCancelable(false);
-        progress1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        currentAverage = findViewById(R.id.currentAverage);
-        calculateAverage = findViewById(R.id.calculateAverage);
-        calculateAverage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progress1.show();
-                mFirestore1.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document("Internal 1").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().exists()) {
-                                if (task.getResult().getString("marksObtained").equals("AB")) {
-                                    internal1 = 0;
-                                } else {
-                                    internal1 = Integer.valueOf(task.getResult().getString("marksObtained"));
-                                }
-                                mFirestore3.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document("Internal 2").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            if (task.getResult().exists()) {
-                                                if (task.getResult().getString("marksObtained").equals("AB")) {
-                                                    internal2 = 0;
-                                                } else {
-                                                    internal2 = Integer.valueOf(task.getResult().getString("marksObtained"));
-                                                }
-                                                mFirestore4.collection("Student").document(studentId).collection(semester).document("Marks").collection(subjectCode).document("Marks").collection("Internal").document("Internal 3").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                        if (task.isSuccessful()) {
-                                                            if (task.getResult().exists()) {
-                                                                if (task.getResult().getString("marksObtained").equals("AB")) {
-                                                                    internal3 = 0;
-                                                                } else {
-                                                                    internal3 = Integer.valueOf(task.getResult().getString("marksObtained"));
-                                                                }
-                                                                if (internal1 >= internal2 && internal1 >= internal3) {
-                                                                    if (internal2 >= internal3) {
-                                                                        averageValue = (internal1 + internal2) / 2;
-                                                                        currentAverage.setText(String.valueOf(averageValue));
-                                                                        progress1.dismiss();
-                                                                    } else {
-                                                                        averageValue = (internal1 + internal3) / 2;
-                                                                        currentAverage.setText(String.valueOf(averageValue));
-                                                                        progress1.dismiss();
-                                                                    }
-                                                                } else if (internal2 >= internal1 && internal2 >= internal3) {
-                                                                    if (internal1 >= internal3) {
-                                                                        averageValue = (internal2 + internal1) / 2;
-                                                                        currentAverage.setText(String.valueOf(averageValue));
-                                                                        progress1.dismiss();
-                                                                    } else {
-                                                                        averageValue = (internal2 + internal3) / 2;
-                                                                        currentAverage.setText(String.valueOf(averageValue));
-                                                                        progress1.dismiss();
-                                                                    }
-                                                                } else if (internal3 >= internal1 && internal3 >= internal2) {
-                                                                    if (internal1 >= internal2) {
-                                                                        averageValue = (internal3 + internal1) / 2;
-                                                                        currentAverage.setText(String.valueOf(averageValue));
-                                                                        progress1.dismiss();
-                                                                    } else {
-                                                                        averageValue = (internal3 + internal2) / 2;
-                                                                        currentAverage.setText(String.valueOf(averageValue));
-                                                                        progress1.dismiss();
-                                                                    }
-                                                                }
-                                                                if (averageValue < 15) {
-                                                                    currentAverage.setTextColor(Color.rgb(244, 67, 54));
-                                                                    progress1.dismiss();
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
             }
         });
     }

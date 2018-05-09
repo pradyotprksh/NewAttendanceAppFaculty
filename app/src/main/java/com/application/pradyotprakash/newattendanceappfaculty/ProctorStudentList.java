@@ -156,11 +156,11 @@ public class ProctorStudentList extends AppCompatActivity {
                                         mFirestore1.collection("Student/" + studentsList.get(position).studentId + "/Notifications").add(notificationMessage).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                             @Override
                                             public void onSuccess(DocumentReference documentReference) {
-                                                Toast.makeText(ProctorStudentList.this,"Message Sent",Toast.LENGTH_SHORT).show();
+                                                progress.dismiss();
+                                                finalMessage.setText("");
                                             }
                                         });
                                     }
-                                    progress.dismiss();
                                 }
                             } else {
                                 String retrieving_error = task.getException().getMessage();

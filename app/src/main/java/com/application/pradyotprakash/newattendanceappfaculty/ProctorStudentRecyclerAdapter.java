@@ -39,7 +39,7 @@ public class ProctorStudentRecyclerAdapter extends RecyclerView.Adapter<ProctorS
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         mFirestore = FirebaseFirestore.getInstance();
         studentId = studentsList.get(position).getStudentId();
         mFirestore.collection("Student").document(studentId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -61,7 +61,7 @@ public class ProctorStudentRecyclerAdapter extends RecyclerView.Adapter<ProctorS
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, StudentDetailsProctor.class);
-                intent.putExtra("studentId", studentId);
+                intent.putExtra("studentId", studentsList.get(position).getStudentId());
                 context.startActivity(intent);
             }
         });

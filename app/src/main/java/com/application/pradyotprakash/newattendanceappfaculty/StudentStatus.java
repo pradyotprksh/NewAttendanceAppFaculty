@@ -110,7 +110,7 @@ public class StudentStatus extends AppCompatActivity {
                                         days = task.getResult().getDouble("daysAttended");
                                         percentage = task.getResult().getDouble("percentage");
                                         studentDaysPresent.setText(String.valueOf(days + " out of " + totalDays + " Attended"));
-                                        studentPercentage.setText(String.valueOf("Percentage: " + String.format("Value of a: %.2f", percentage)));
+                                        studentPercentage.setText(String.valueOf("Percentage: " + String.format("%.2f", percentage)));
                                         if (percentage < 75.0) {
                                             studentPercentage.setTextColor(Color.rgb(244, 67, 54));
                                         }

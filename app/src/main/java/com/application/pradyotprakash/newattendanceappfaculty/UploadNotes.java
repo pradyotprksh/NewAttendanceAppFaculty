@@ -79,36 +79,86 @@ public class UploadNotes extends AppCompatActivity {
         uploadFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progress = new ProgressDialog(UploadNotes.this);
-                progress.setTitle("Please Wait.");
-                progress.setMessage("Uploading File.");
-                progress.setCancelable(false);
-                progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progress.show();
-                if (!TextUtils.isEmpty(noteName.getText().toString())) {
-                    if (!TextUtils.isEmpty(noteTitle.getText().toString())) {
-                        if (TextUtils.isEmpty(noteDescription.getText().toString())) {
-                            noteDescription.setText("Notes for " + semesterValue + " of class " + classValue);
-                        }
-                        StorageReference file_path = mStorageReference.child("student_notes").child(noteName.getText().toString());
-                        file_path.putFile(fileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    storeFireStore(task, noteTitle.getText().toString(), noteDescription.getText().toString(), noteName.getText().toString());
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if ((ContextCompat.
+                                checkSelfPermission(UploadNotes.this,
+                                        android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) &&
+                                (ContextCompat.
+                                        checkSelfPermission(UploadNotes.this,
+                                                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                            ActivityCompat.requestPermissions(UploadNotes.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                            ActivityCompat.requestPermissions(UploadNotes.this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                        } else {
+                            progress = new ProgressDialog(UploadNotes.this);
+                            progress.setTitle("Please Wait.");
+                            progress.setMessage("Uploading File.");
+                            progress.setCancelable(false);
+                            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                            progress.show();
+                            if (!TextUtils.isEmpty(noteName.getText().toString())) {
+                                if (!TextUtils.isEmpty(noteTitle.getText().toString())) {
+                                    if (TextUtils.isEmpty(noteDescription.getText().toString())) {
+                                        noteDescription.setText("Notes for " + semesterValue + " of class " + classValue);
+                                    }
+                                    StorageReference file_path = mStorageReference.child("student_notes").child(noteName.getText().toString());
+                                    file_path.putFile(fileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                storeFireStore(task, noteTitle.getText().toString(), noteDescription.getText().toString(), noteName.getText().toString());
+                                            } else {
+                                                String error = task.getException().getMessage();
+                                                Toast.makeText(UploadNotes.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                                                progress.dismiss();
+                                            }
+                                        }
+                                    });
                                 } else {
-                                    String error = task.getException().getMessage();
-                                    Toast.makeText(UploadNotes.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(UploadNotes.this, "Enter The Title For The Note", Toast.LENGTH_SHORT).show();
                                     progress.dismiss();
                                 }
+                            } else {
+                                Toast.makeText(UploadNotes.this, "Select A File.", Toast.LENGTH_SHORT).show();
+                                progress.dismiss();
                             }
-                        });
+                        }
                     } else {
-                        Toast.makeText(UploadNotes.this, "Enter The Title For The Note", Toast.LENGTH_SHORT).show();
-                        progress.dismiss();
+                        progress = new ProgressDialog(UploadNotes.this);
+                        progress.setTitle("Please Wait.");
+                        progress.setMessage("Uploading File.");
+                        progress.setCancelable(false);
+                        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        progress.show();
+                        if (!TextUtils.isEmpty(noteName.getText().toString())) {
+                            if (!TextUtils.isEmpty(noteTitle.getText().toString())) {
+                                if (TextUtils.isEmpty(noteDescription.getText().toString())) {
+                                    noteDescription.setText("Notes for " + semesterValue + " of class " + classValue);
+                                }
+                                StorageReference file_path = mStorageReference.child("student_notes").child(noteName.getText().toString());
+                                file_path.putFile(fileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            storeFireStore(task, noteTitle.getText().toString(), noteDescription.getText().toString(), noteName.getText().toString());
+                                        } else {
+                                            String error = task.getException().getMessage();
+                                            Toast.makeText(UploadNotes.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                                            progress.dismiss();
+                                        }
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(UploadNotes.this, "Enter The Title For The Note", Toast.LENGTH_SHORT).show();
+                                progress.dismiss();
+                            }
+                        } else {
+                            Toast.makeText(UploadNotes.this, "Select A File.", Toast.LENGTH_SHORT).show();
+                            progress.dismiss();
+                        }
                     }
-                } else {
-                    Toast.makeText(UploadNotes.this, "Select A File.", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(UploadNotes.this, "File must be in the download folder.", Toast.LENGTH_SHORT).show();
                     progress.dismiss();
                 }
             }

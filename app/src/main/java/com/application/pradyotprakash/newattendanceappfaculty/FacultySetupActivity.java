@@ -89,8 +89,8 @@ public class FacultySetupActivity extends AppCompatActivity {
         facultySetupProgress.setVisibility(View.VISIBLE);
         facultyName.setEnabled(false);
         facultyId.setEnabled(false);
-        classTeacher.setClickable(false);
-        proctor.setClickable(false);
+        classTeacher.setEnabled(false);
+        proctor.setEnabled(false);
         facultyBranch.setEnabled(false);
         branchSpinner.setEnabled(false);
         facultySetupFirestore.collection("Faculty").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -188,12 +188,16 @@ public class FacultySetupActivity extends AppCompatActivity {
                     facultyId.setEnabled(true);
                     facultyBranch.setEnabled(true);
                     branchSpinner.setEnabled(true);
+                    classTeacher.setEnabled(true);
+                    proctor.setEnabled(true);
                     facultyEditSetupBtn.setText("Done Editing");
                 } else if (facultyEditSetupBtn.getText().toString().equals("Done Editing")){
                     facultyName.setEnabled(false);
                     facultyId.setEnabled(false);
                     facultyBranch.setEnabled(false);
                     branchSpinner.setEnabled(false);
+                    classTeacher.setEnabled(false);
+                    proctor.setEnabled(false);
                     facultyEditSetupBtn.setText("Edit Details");
                 }
             }

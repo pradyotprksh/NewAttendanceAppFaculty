@@ -22,6 +22,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class StudentAttendanceList extends AppCompatActivity {
     private StudentRecyclerAdapter studentRecyclerAdapter;
     private StudentRecyclerAdapterWoAttendance studentRecyclerAdapter1;
     private FirebaseFirestore mFirestore, mFirestore1, mFirestore2, mFirestore3;
-    private static double totalDays;
+    private static double totalDays = 0.0;
     private String user_id;
     private FirebaseAuth mAuth;
 
@@ -99,37 +100,63 @@ public class StudentAttendanceList extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         user_id = mAuth.getCurrentUser().getUid();
         mFirestore2 = FirebaseFirestore.getInstance();
-        mFirestore2.collection("Faculty").document(user_id).collection("Subjects").document(subjectCode).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    if (task.getResult().exists()) {
-                        try {
-                            totalDays = task.getResult().getDouble("totalDays");
-                        } catch (Exception e) {
-                            totalDays = 0.0;
-                        }
-                    } else {
-                        totalDays = 0.0;
-                    }
-                }
-            }
-        });
         mFirestore3 = FirebaseFirestore.getInstance();
         takeAttendance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                totalDays = totalDays + 1;
-                Map<String, Object> totalClass = new HashMap<>();
-                totalClass.put("totalDays", totalDays);
-                mFirestore2.collection("Faculty").document(user_id).collection("Subjects").document(subjectCode).update(totalClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+                mFirestore2.collection("Faculty").document(user_id).collection("Subjects").document(subjectCode).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        mStudentListViewEithAttendance.setVisibility(View.VISIBLE);
-                        mStudentListView.setVisibility(View.INVISIBLE);
-                        takeAttendance.setVisibility(View.INVISIBLE);
-                        notTakeAttendance.setVisibility(View.VISIBLE);
-                        doneTakeAttendance.setVisibility(View.VISIBLE);
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().exists()) {
+                                try {
+                                    totalDays = task.getResult().getDouble("totalDays");
+                                    totalDays = totalDays + 1;
+                                    Map<String, Object> totalClass = new HashMap<>();
+                                    totalClass.put("totalDays", totalDays);
+                                    mFirestore2.collection("Faculty").document(user_id).collection("Subjects").document(subjectCode).update(totalClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            mStudentListViewEithAttendance.setVisibility(View.VISIBLE);
+                                            mStudentListView.setVisibility(View.INVISIBLE);
+                                            takeAttendance.setVisibility(View.INVISIBLE);
+                                            notTakeAttendance.setVisibility(View.VISIBLE);
+                                            doneTakeAttendance.setVisibility(View.VISIBLE);
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    totalDays = 0.0;
+                                    totalDays = totalDays + 1;
+                                    Map<String, Object> totalClass = new HashMap<>();
+                                    totalClass.put("totalDays", totalDays);
+                                    mFirestore2.collection("Faculty").document(user_id).collection("Subjects").document(subjectCode).update(totalClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            mStudentListViewEithAttendance.setVisibility(View.VISIBLE);
+                                            mStudentListView.setVisibility(View.INVISIBLE);
+                                            takeAttendance.setVisibility(View.INVISIBLE);
+                                            notTakeAttendance.setVisibility(View.VISIBLE);
+                                            doneTakeAttendance.setVisibility(View.VISIBLE);
+                                        }
+                                    });
+                                }
+                            } else {
+                                totalDays = 0.0;
+                                totalDays = totalDays + 1;
+                                Map<String, Object> totalClass = new HashMap<>();
+                                totalClass.put("totalDays", totalDays);
+                                mFirestore2.collection("Faculty").document(user_id).collection("Subjects").document(subjectCode).update(totalClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        mStudentListViewEithAttendance.setVisibility(View.VISIBLE);
+                                        mStudentListView.setVisibility(View.INVISIBLE);
+                                        takeAttendance.setVisibility(View.INVISIBLE);
+                                        notTakeAttendance.setVisibility(View.VISIBLE);
+                                        doneTakeAttendance.setVisibility(View.VISIBLE);
+                                    }
+                                });
+                            }
+                        }
                     }
                 });
             }
@@ -137,6 +164,22 @@ public class StudentAttendanceList extends AppCompatActivity {
         notTakeAttendance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mFirestore2.collection("Faculty").document(user_id).collection("Subjects").document(subjectCode).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().exists()) {
+                                try {
+                                    totalDays = task.getResult().getDouble("totalDays");
+                                } catch (Exception e) {
+                                    totalDays = 0.0;
+                                }
+                            } else {
+                                totalDays = 0.0;
+                            }
+                        }
+                    }
+                });
                 totalDays = totalDays - 1;
                 Map<String, Object> totalClass = new HashMap<>();
                 totalClass.put("totalDays", totalDays);
@@ -162,27 +205,15 @@ public class StudentAttendanceList extends AppCompatActivity {
                 doneTakeAttendance.setVisibility(View.INVISIBLE);
             }
         });
-        DividerItemDecoration horizontalDecoration = new DividerItemDecoration(mStudentListView.getContext(),
-                DividerItemDecoration.VERTICAL);
-        Drawable horizontalDivider = ContextCompat.getDrawable(StudentAttendanceList.this, R.drawable.horizontal_divider);
-        horizontalDecoration.setDrawable(horizontalDivider);
-        mStudentListView.addItemDecoration(horizontalDecoration);
-
-        DividerItemDecoration horizontalDecoration1 = new DividerItemDecoration(mStudentListViewEithAttendance.getContext(),
-                DividerItemDecoration.VERTICAL);
-        Drawable horizontalDivider1 = ContextCompat.getDrawable(StudentAttendanceList.this, R.drawable.horizontal_divider);
-        horizontalDecoration1.setDrawable(horizontalDivider1);
-        mStudentListViewEithAttendance.addItemDecoration(horizontalDecoration1);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        studentsList.clear();
-        studentList1.clear();
-        mFirestore1.collection("Student").orderBy("usn").addSnapshotListener(StudentAttendanceList.this, new EventListener<QuerySnapshot>() {
+        mFirestore1.collection("Student").whereEqualTo("className", classValue).addSnapshotListener(StudentAttendanceList.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                studentList1.clear();
                 for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
                     if (doc.getType() == DocumentChange.Type.ADDED) {
                         String student_id = doc.getDocument().getId();
@@ -193,9 +224,10 @@ public class StudentAttendanceList extends AppCompatActivity {
                 }
             }
         });
-        mFirestore.collection("Student").orderBy("usn").addSnapshotListener(StudentAttendanceList.this, new EventListener<QuerySnapshot>() {
+        mFirestore.collection("Student").whereEqualTo("className", classValue).addSnapshotListener(StudentAttendanceList.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                studentsList.clear();
                 for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
                     if (doc.getType() == DocumentChange.Type.ADDED) {
                         String student_id = doc.getDocument().getId();
